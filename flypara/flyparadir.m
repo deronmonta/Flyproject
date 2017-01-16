@@ -37,8 +37,13 @@ tracks.center = [250 250];%Change the center of the dish here
 tracks.radius = 250;% Change the radius of the plate here
 tracks.targetzoneinner = 75;% Change this variable to reidentify the inner target zone.
 tracks.targetzoneouter = 240;% Change this variable to reidentify the outter target zone.
+<<<<<<< HEAD
 tracks.dzoneri = 75; %This is the radius of inner decision zone
 tracks.dzonero = 100; % This is the radius of outer decision zone
+=======
+tracks.dzoneri = 50; %This is the radius of inner decision zone
+tracks.dzonero = 75; % This is the radius of outer decision zone
+>>>>>>> origin/master
 disp(savedir)
 tracks.savedir = savedir;%This is the directory of where the files will be saved
 tracks.fname = myFiles(N).name;
@@ -850,6 +855,14 @@ hold off
                       dim = [.3 .4 .7 .375];
                       annotation('textbox',dim,'FitBoxToText','on','LineStyle','none','String',str);
 
+
+                      str1 = num2str(tracks.attraction2);
+                      str2 = 'New Attraction Index : ';
+                      str = strcat(str2,str1);
+                      dim = [.3 .4 .7 .350];
+                      annotation('textbox',dim,'FitBoxToText','on','LineStyle','none','String',str);
+
+
                       filename = 'Parameters1.fig';
                       fig2 = strcat(tracks.fname,filename);% Saves the figure as file name + track results
                       saveas(gcf,fig2);
@@ -900,6 +913,8 @@ hold off
                       subplot(2,2,1);
                       bar(tracks.eachtimeino);
                       title('Each time span for outer zone');
+
+
                       end
 
 
