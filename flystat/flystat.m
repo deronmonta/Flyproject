@@ -15,25 +15,25 @@ myfiles = dir(fullfile(myDir,'*.mat'));
 popstat = struct('filenum',[],'dis2center',[],'attraction',[],'avgattraction',[],'speed',[],'avgspeed',[],'innerspeed',[],...
 				'midspeed',[],'outerspeed',[],'avginnerspeed',[],'avgmidspeed',[],'avgouterspeed',[],'avginnertime',[],'avgmidtime',[],'avgoutertime',[],...
 				'innertime',[],'midtime',[],'outertime',[],'destime',[],'correctd',[],'wrongd',[],'drate',[],'correctdcount',[],'avgcorrectd',[],'avgwrongd',[],...
-				'attraction2',[]);
+				'attractiontwo',[],'framesperwrongd', );
 
 tracks = [];
 popstat.filenum = length(myfiles);%The number of files to process
-
+popstat.destime = hours;
+popstat.destime = num2str(popstat.destime);%Change it to string
+disp(myDir)
 	for N = 1 : length(myfiles)%Load every tracks file in directory
 
 		%load files and display their names
 		load(myfiles(N).name);
 		disp(myfiles(N).name);
-		popstat.destime = hours;
-		popstat.destime = num2str(popstat.destime);%Change it to string
 
 		%re-assign each parameters, bulid stat as population for one condition
 		tracks.dis2center = tracks.dis2center';%reverse column and row, I've made a mistake in flypara and too lazy to fix it
 		popstat.dis2center = [popstat.dis2center;tracks.dis2center];
 		popstat.speed = [popstat.speed;tracks.speed];% Reasign speed
 		popstat.speed(popstat.speed > 30) = [];%Delete speed that are larger than 30
-		popstat.attraction2 = [popstat.attraction2;tracks.attraction2];%Reasign new attracion
+		popstat.attractiontwo = [popstat.attractiontwo;tracks.attraction2];%Reasign new attracion
 		popstat.attraction = [popstat.attraction;tracks.attraction];%Reasign attraction
 
 		%Reasign decision
@@ -95,7 +95,7 @@ end
 
 function resultsdisplay(popstat) %Display the results
 
-saveDir = 'C:\Users\Bayesian\Documents\MATLAB\Wildtype\Popstat_file';%Get saving directory
+saveDir = 'C:\Users\deron\Documents\MATLAB\Wildtype\Popstat_file\04712';%Get saving directory
 
 disp 'attraction';
 disp(popstat.avgattraction);
