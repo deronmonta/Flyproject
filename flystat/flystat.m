@@ -17,6 +17,8 @@ popstat = struct('filenum',[],'dis2center',[],'attraction',[],'avgattraction',[]
 				'innertime',[],'midtime',[],'outertime',[],'destime',[],'correctd',[],'wrongd',[],'drate',[],'correctdcount',[],'avgcorrectd',[],'avgwrongd',[],...
 				'attractiontwo',[],'framesperwrongd', []);
 
+
+
 tracks = [];
 popstat.filenum = length(myfiles);%The number of files to process
 popstat.destime = hours;
@@ -94,6 +96,7 @@ end
 
 
 function resultsdisplay(popstat) %Display the results
+
 
 saveDir = 'C:\Users\Bayesian\Documents\MATLAB\Wildtype\Popstat_file\04712';%Get saving directory
 
