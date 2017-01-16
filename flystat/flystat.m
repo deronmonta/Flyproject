@@ -15,7 +15,7 @@ myfiles = dir(fullfile(myDir,'*.mat'));
 popstat = struct('filenum',[],'dis2center',[],'attraction',[],'avgattraction',[],'speed',[],'avgspeed',[],'innerspeed',[],...
 				'midspeed',[],'outerspeed',[],'avginnerspeed',[],'avgmidspeed',[],'avgouterspeed',[],'avginnertime',[],'avgmidtime',[],'avgoutertime',[],...
 				'innertime',[],'midtime',[],'outertime',[],'destime',[],'correctd',[],'wrongd',[],'drate',[],'correctdcount',[],'avgcorrectd',[],'avgwrongd',[],...
-				'attractiontwo',[],'framesperwrongd', );
+				'attractiontwo',[],'framesperwrongd', []);
 
 tracks = [];
 popstat.filenum = length(myfiles);%The number of files to process
@@ -95,7 +95,7 @@ end
 
 function resultsdisplay(popstat) %Display the results
 
-saveDir = 'C:\Users\deron\Documents\MATLAB\Wildtype\Popstat_file\04712';%Get saving directory
+saveDir = 'C:\Users\Bayesian\Documents\MATLAB\Wildtype\Popstat_file\04712';%Get saving directory
 
 disp 'attraction';
 disp(popstat.avgattraction);

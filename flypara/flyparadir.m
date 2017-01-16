@@ -37,14 +37,9 @@ tracks.center = [250 250];%Change the center of the dish here
 tracks.radius = 250;% Change the radius of the plate here
 tracks.targetzoneinner = 75;% Change this variable to reidentify the inner target zone.
 tracks.targetzoneouter = 240;% Change this variable to reidentify the outter target zone.
-<<<<<<< HEAD
-tracks.dzoneri = 75; %This is the radius of inner decision zone
-tracks.dzonero = 100; % This is the radius of outer decision zone
-=======
 tracks.dzoneri = 50; %This is the radius of inner decision zone
 tracks.dzonero = 75; % This is the radius of outer decision zone
->>>>>>> origin/master
-disp(savedir)
+disp(savedir);
 tracks.savedir = savedir;%This is the directory of where the files will be saved
 tracks.fname = myFiles(N).name;
 load(myFiles(N).name);
@@ -215,11 +210,14 @@ tracks.attraction = 0;
 
 tracks.correctd = 0;
 tracks.wrongd = 0;
+
+%There are two kinds of correct decision: 1. Going from mid zone to inner zone and 2. going from out zone to mid zone
+
 % If fly goes from mid dzone to inside dzone, it's a correct decision
 % If fly goes from mid dzone to outside dzone, it's a wrong decision
    for i = 1:(length(tracks.dzone)-1)
 
-        if (tracks.dzone(i) == 'm') && (tracks.dzone(i+1) == 'i') %From mid dzone to in dzone (correct decision)
+        if (tracks.dzone(i) == 'm') && (tracks.dzone(i+1) == 'i') || (tracks.dzone(i) == 'o' && tracks.dzone(i+1) == 'm')
 
           disp(i);
           tracks.correctd = tracks.correctd + 1;
@@ -227,9 +225,10 @@ tracks.wrongd = 0;
 
         end
 
-        if (tracks.dzone(i) == 'm') && (tracks.dzone(i+1) == 'o')%From mid dzone to out dzone (wrong decision)
+        %From mid zone to outter zone or from inner zone to mid zone are wrong decisions
+        if (tracks.dzone(i) == 'm') && (tracks.dzone(i+1) == 'o') || (tracks.dzone(i) == 'i' && tracks.dzone(i+1) == 'm')
 
-            disp (i)
+            disp(i);
            disp('Wrong decision');
            tracks.wrongd = tracks.wrongd + 1;
 
@@ -689,7 +688,7 @@ plot(x2,y2,'r--');%Plot outter target zone
 
 filename = 'Tracks_results.fig';
 fig1 = strcat(tracks.fname,filename);% Saves the figure as file name + track results
-saveas(gcf,fig1);
+saveas(gcf,fullfile(tracks.savedir,fig1));
 
 
 hold off
@@ -865,7 +864,7 @@ hold off
 
                       filename = 'Parameters1.fig';
                       fig2 = strcat(tracks.fname,filename);% Saves the figure as file name + track results
-                      saveas(gcf,fig2);
+                      saveas(gcf,fullfile(tracks.savedir,fig2));
 
 
                       figure; %Next figure
@@ -890,7 +889,7 @@ hold off
                       set(gca,'xticklabel',names);
                      filename = 'Parameters2.fig';
                       fig3 = strcat(tracks.fname,filename);% Saves the figure as file name + track results
-                      saveas(gcf,fig3);
+                      saveas(gcf,fullfile(tracks.savedir,fig3));
 
 
                       subplot(2,2,3);

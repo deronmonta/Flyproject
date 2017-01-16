@@ -96,5 +96,5 @@ plot(avgd);
 title('Frames per decision');
 
 subplot(3,3,9);
-plot(attraction2);
-title('New attracion index');
+plot(drate);
+title('Decisions percentage');
