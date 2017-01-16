@@ -37,7 +37,7 @@ tracks.center = [250 250];%Change the center of the dish here
 tracks.radius = 250;% Change the radius of the plate here
 tracks.targetzoneinner = 75;% Change this variable to reidentify the inner target zone.
 tracks.targetzoneouter = 240;% Change this variable to reidentify the outter target zone.
-tracks.dzoneri = 50; %This is the radius of inner decision zone
+tracks.dzoneri = 75; %This is the radius of inner decision zone
 tracks.dzonero = 100; % This is the radius of outer decision zone
 disp(savedir)
 tracks.savedir = savedir;%This is the directory of where the files will be saved
