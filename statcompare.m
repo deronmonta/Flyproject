@@ -21,7 +21,8 @@ avgcd = [];
 avgd = [];
 filelength = [];
 totoald = [];
-attraction2 = [];
+runs = [];
+stops = [];
 
     for N = 1 : length(myFiles)%Load every tracks file in directory
 
@@ -47,12 +48,22 @@ attraction2 = [];
       drate = [drate;popstat.drate];
       correctd = [correctd;popstat.avgcorrectd];
       wrongd = [wrongd;popstat.avgwrongd];
+      runs = [runs;popstat.avgruns];
+      stops = [stops;popstat.avgstops];
       totald = correctd + wrongd;
-      attraction2 = [attraction2;popstat.attraction2];
+      %attraction2 = [attraction2;popstat.attraction2];
 
       avgd = filelength ./ totald;% Average frames needed to make one decision
       avgwd = filelength ./ wrongd;%Average frames needed to make one wrong decision
       avgcd = filelength ./ correctd;%Average frames needed to make one right decision
+
+      stops
+      runs = filelength ./ runs;
+      stops = filelength ./ stops;
+      % turns = filelength ./ turns;
+
+
+
     end
 
     %disp(drate);
@@ -60,10 +71,10 @@ attraction2 = [];
 disp(filelength);
 disp(totald);
 disp(avgd);
+disp(runs);
 subplot(3,3,1);
 plot(attraction);
 title('Attraction');
-
 
 subplot(3,3,2);
 plot(avgspeed);
@@ -76,8 +87,6 @@ title('Frames per Correct Decision');
 subplot(3,3,4);
 plot(avgwd);
 title('Frames per Wrong Decision');
-
-
 
 subplot(3,3,5);
 plot(innerspeed);
@@ -98,3 +107,12 @@ title('Frames per decision');
 subplot(3,3,9);
 plot(drate);
 title('Decisions percentage');
+
+figure;
+subplot(3,3,1);
+plot(runs);
+title('Frames per run');
+
+subplot(3,3,2);
+plot(stops);
+title('Frames per stop')
