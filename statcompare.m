@@ -2,27 +2,27 @@
 %Input is popstat
 
 
+%The main function
+function statcompare()
+
   mydir = uigetdir;
   myFiles = dir(fullfile(mydir,'*.mat'));
   popstat = [];
 
-figure;
-hold on;
-attraction = [];
-avgspeed = [];
-drate =[];
-correctd = [];
-wrongd = [];
-innerspeed = [];
-midspeed = [];
-outerspeed = [];
-avgwd = [];
-avgcd = [];
-avgd = [];
-filelength = [];
-totoald = [];
-runs = [];
-stops = [];
+
+stats = struct('attraction',[],'avgspeed',[],'drate',[],'correctd',[],'wrongd',[],'innerspeed',[],'midspeed',[],...
+            'outerspeed',[],'avgwd',[],'avgcd',[],'avgd',[],'filelength',[],'totald',[],'runs',[],'stops',[]);
+
+            stats = loopthrough(stats,myFiles);
+            stats = calculations(stats);
+            display(stats);
+
+
+end
+
+%Loop through all popstat files
+
+ function stats = loopthrough(stats,myFiles)
 
     for N = 1 : length(myFiles)%Load every tracks file in directory
 
@@ -38,81 +38,83 @@ stops = [];
       disp(popstat.avgcorrectd);
       disp('Wrong Decisions');
       disp(popstat.avgwrongd);
+      disp('Runs');
+      disp(popstat.runs); 
 
-      filelength = [filelength; length(popstat.dis2center)];
-      innerspeed = [innerspeed;popstat.avginnerspeed];
-      midspeed = [midspeed;popstat.avgmidspeed];
-      outerspeed = [outerspeed;popstat.avgouterspeed];
-      attraction = [attraction;popstat.avgattraction];
-      avgspeed = [avgspeed;popstat.avgspeed];
-      drate = [drate;popstat.drate];
-      correctd = [correctd;popstat.avgcorrectd];
-      wrongd = [wrongd;popstat.avgwrongd];
-      runs = [runs;popstat.avgruns];
-      stops = [stops;popstat.avgstops];
-      totald = correctd + wrongd;
-      %attraction2 = [attraction2;popstat.attraction2];
-
-      avgd = filelength ./ totald;% Average frames needed to make one decision
-      avgwd = filelength ./ wrongd;%Average frames needed to make one wrong decision
-      avgcd = filelength ./ correctd;%Average frames needed to make one right decision
-
-      stops
-      runs = filelength ./ runs;
-      stops = filelength ./ stops;
-      % turns = filelength ./ turns;
-
-
-
+      stats.filelength = [stats.filelength; length(popstat.dis2center)];
+      stats.innerspeed = [stats.innerspeed;popstat.avginnerspeed];
+      stats.midspeed = [stats.midspeed;popstat.avgmidspeed];
+      stats.outerspeed = [stats.outerspeed;popstat.avgouterspeed];
+      stats.attraction = [stats.attraction;popstat.avgattraction];
+      stats.avgspeed = [stats.avgspeed;popstat.avgspeed];
+      stats.drate = [stats.drate;popstat.drate];
+      stats.correctd = [stats.correctd;popstat.avgcorrectd];
+      stats.wrongd = [stats.wrongd;popstat.avgwrongd];
+      stats.runs = [stats.runs;popstat.avgruns];
+      stats.stops = [stats.stops;popstat.avgstops];
     end
+end
 
-    %disp(drate);
-    disp(wrongd);
-disp(filelength);
-disp(totald);
-disp(avgd);
-disp(runs);
-subplot(3,3,1);
-plot(attraction);
-title('Attraction');
+%recalculate parameters
+function stats = calculations(stats)
+  stats.totald = stats.correctd + stats.wrongd;
+  stats.avgd = stats.filelength ./ stats.totald;% Average frames needed to make one decision
+  stats.avgwd = stats.filelength ./ stats.wrongd;%Average frames needed to make one wrong decision
+  stats.avgcd = stats.filelength ./ stats.correctd;%Average frames needed to make one right decision
 
-subplot(3,3,2);
-plot(avgspeed);
-title('Average Speed');
+  stats.runs = stats.runs ./ stats.filelength;
+  stats.stops = stats.stops ./ stats.filelength;
 
-subplot(3,3,3);
-plot(avgcd);
-title('Frames per Correct Decision');
+end
 
-subplot(3,3,4);
-plot(avgwd);
-title('Frames per Wrong Decision');
 
-subplot(3,3,5);
-plot(innerspeed);
-title('Innerspeed');
+function  display(stats)
 
-subplot(3,3,6);
-plot(midspeed);
-title('Mid Speed');
+  figure;
+  hold on;
 
-subplot(3,3,7);
-plot(outerspeed);
-title('Outer Speed');
+  subplot(3,3,1);
+  plot(stats.attraction);
+  title('Attraction');
 
-subplot(3,3,8);
-plot(avgd);
-title('Frames per decision');
+  subplot(3,3,2);
+  plot(stats.avgspeed);
+  title('Average Speed');
 
-subplot(3,3,9);
-plot(drate);
-title('Decisions percentage');
+  subplot(3,3,3);
+  plot(stats.avgcd);
+  title('Frames per Correct Decision');
 
-figure;
-subplot(3,3,1);
-plot(runs);
-title('Frames per run');
+  subplot(3,3,4);
+  plot(stats.avgwd);
+  title('Frames per Wrong Decision');
 
-subplot(3,3,2);
-plot(stops);
-title('Frames per stop')
+  subplot(3,3,5);
+  plot(stats.innerspeed);
+  title('Innerspeed');
+
+  subplot(3,3,6);
+  plot(stats.midspeed);
+  title('Mid Speed');
+
+  subplot(3,3,7);
+  plot(stats.outerspeed);
+  title('Outer Speed');
+
+  subplot(3,3,8);
+  plot(stats.avgd);
+  title('Frames per decision');
+
+  subplot(3,3,9);
+  plot(stats.drate);
+  title('Decisions percentage');
+
+  figure;
+  subplot(3,3,1);
+  plot(stats.runs);
+  title('Frames per run');
+
+  subplot(3,3,2);
+  plot(stats.stops);
+  title('Stops per frame')
+  end

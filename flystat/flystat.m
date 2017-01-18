@@ -15,7 +15,7 @@ myfiles = dir(fullfile(myDir,'*.mat'));
 popstat = struct('filenum',[],'dis2center',[],'attraction',[],'avgattraction',[],'speed',[],'avgspeed',[],'innerspeed',[],...
 				'midspeed',[],'outerspeed',[],'avginnerspeed',[],'avgmidspeed',[],'avgouterspeed',[],'avginnertime',[],'avgmidtime',[],'avgoutertime',[],...
 				'innertime',[],'midtime',[],'outertime',[],'destime',[],'correctd',[],'wrongd',[],'drate',[],'correctdcount',[],'avgcorrectd',[],'avgwrongd',[],...
-				'attractiontwo',[],'framesperwrongd',[],'runs',[],'stops',[],'turns',[],'eachtimeini',[],'eachtimeino',[],'eachtimeinm',[],'avgruns',[]);
+				'attractiontwo',[],'framesperwrongd',[],'runs',[],'stops',[],'turns',[],'eachtimeini',[],'eachtimeino',[],'eachtimeinm',[],'avgruns',[],'avgstops',[]);
 
 
 
@@ -71,13 +71,13 @@ disp(myDir);
 		outert = length(tracks.outindex);
 		midt = length(tracks.midindex);
 
-		avgi = innert/tracks.isini;
-		avgm = midt/tracks.isinm;
-		avgo = outert/tracks.isino;
+		% avgi = innert/tracks.isini;
+		% avgm = midt/tracks.isinm;
+		% avgo = outert/tracks.isino;
 
-		popstat.innertime =[popstat.innertime;avgi];
-		popstat.midspeed = [popstat.midtime;avgm];
-		popstat.outertime = [popstat.outertime;avgo];
+		% popstat.innertime =[popstat.innertime;avgi];
+		% popstat.midspeed = [popstat.midtime;avgm];
+		% popstat.outertime = [popstat.outertime;avgo];
 
 
 	end

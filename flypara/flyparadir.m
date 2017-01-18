@@ -31,7 +31,7 @@ disp(myFiles(N).name);
 wholepos =[];
 tracks = struct('fname',[],'wholepos',[],'dis2center',[],'speed',[],'angspeed',[],'innertimespan',[],'midtimespan',[],'attraction',[],'zonet',[],...
                 'isini',[],'center',[],'radius',[],'targetzoneouter',[],'isinm',[],'sharpturn',[],...
-                'isino',[],'innerspeed',[],'midspeed',[],'outerspeed',[],'inindex',[],'outindex',[],'midindex',[],'zone',[],'runs',[],...
+                'isino',[],'innerspeed',[],'midspeed',[],'outerspeed',[],'inindex',[],'outindex',[],'midindex',[],'zone',[],'runs',[],'stops',[],...
                 'dzonein',[],'dzoneout',[],'dzone',[],'correctd',[],'wrongd',[],'eachtimeini',[],'eachtimeinm',[],'eachtimeino',[],'savedir',[],'attraction2',[]);
 tracks.center = [250 250];%Change the center of the dish here
 tracks.radius = 250;% Change the radius of the plate here
@@ -50,7 +50,7 @@ tracks = redefinetrack(tracks);
 tracks = correction(tracks);
 tracks = zonetime(tracks);%catagorize positions to three zones
 tracks = timespan(tracks);
-tracks = findrunstop(tracks);
+tracks = findtop(tracks);
 tracks = findaspeed(tracks);%Find the angular speed
 displayresults(tracks);
 exceloutput(tracks);
@@ -95,15 +95,13 @@ diserror = find(tracks.dis2center > tracks.radius); % Get the indices of the err
 
 tracks.wholepos(diserror,:) = [];
 
-tracks.dis2center(:) = [];
-
+tracks.dis2center = [];
 for i = 1 : length(tracks.wholepos)
 
 tracks.dis2center(i) = sqrt(sum((tracks.wholepos(i,:)-tracks.center(1,:)).^2));
 
 
-  end
-
+end
 
 tracks.speed =[];
 
@@ -120,8 +118,9 @@ end
 
 speederror = find(tracks.speed > 40);% Find speed error using new speed
 
-tracks.speedavg = tracks.speed;
-tracks.speedavg(speederror,:) = [];
+tracks.speed(speederror,:) = [];
+tracks.wholepos(speederror,:) = [];
+tracks.dis2center(speederror) = [];
 
 
 fprintf('dis2center');
@@ -142,7 +141,7 @@ timeenter= 0;
 timeexit = 0;
 tracks.isininner = [];
 tracks.isinouter = [];
-tracks.attraction = 0;
+tracks.attraction = [];
 
         for k = 1 : length(tracks.dis2center)
 
@@ -167,6 +166,7 @@ tracks.attraction = 0;
          tracks.zone = [tracks.zone;'o'];
 
         end
+
 
         end
 
@@ -238,10 +238,11 @@ tracks.wrongd = 0;
 
     end
 
-    disp(length(tracks.speed));
-    disp(length(tracks.zone));
-    tracks.zone(end) = [];
 
+
+
+
+tracks.zone(end) = [];
 
      tracks.innerspeed = mean(tracks.speed(find(tracks.zone == 'i')));%This calculates the mean speed of the inner zone
      tracks.outerspeed = mean(tracks.speed(find(tracks.zone == 'o')));%This calculates the mean speed of the outer zone
@@ -251,9 +252,9 @@ end
 
 function tracks = timespan(tracks) %Find the timespan of fly spent in each zone
 
-tracks.isini = 0;
-tracks.isino = 0;
-tracks.isinm = 0;
+tracks.isini = [];
+tracks.isino = [];
+tracks.isinm = [];
     for i = 1 : (length(tracks.zone)-1)
 
       if tracks.zone(i) =='m' && tracks.zone(i+1) == 'i' %fly enters inneer zone coming from mid zone
@@ -286,21 +287,21 @@ tracks.isinm = 0;
 
       inzone = (reversezone == '1');
       timestamps = [find(diff([-1 inzone -1]) ~= 0)];%Where the inzone change
-      runlength = diff(timestamps)
+      runlength = diff(timestamps);
       tracks.eachtimeini = runlength(1+(inzone(1) == 0 ):2:end);
 
 
       timestamps = [find(diff([-1 reversezone -1]) ~= 0)];%Where the tracks.zone change
       midzone = (reversezone =='2');
       timestamps = [find(diff([-1 midzone -1]) ~= 0)];%Where the midzone change
-      runlength = diff(timestamps)
+      runlength = diff(timestamps);
       tracks.eachtimeinm = runlength(1+(midzone(1) == 0):2:end);
 
 
       timestamps = [find(diff([-1 reversezone -1]) ~= 0)];%Where the tracks.zone change
       outzone = (reversezone =='3');
       timestamps = [find(diff([-1 outzone -1]) ~= 0)];%Where the outzone change
-      runlength = diff(timestamps)
+      runlength = diff(timestamps);
       tracks.eachtimeino = runlength(1 +(outzone(1) == 0):2:end);
 
 
@@ -319,58 +320,20 @@ disp(tracks.isino);
 end
 
 
-%This function finds the runs and stops of the fly according to the speed
+%This function finds the  and stops of the fly according to the speed
 
-function tracks = findrunstop(tracks)
+function tracks = findtop(tracks)
 
 
 stopcount = 0;
 stops = 0;
 runcount = 0;
 runs = 0;
-for i = 1:length(tracks.speed)
 
 
-    if tracks.speed(i) < 2 % Stop thereshold
+tracks.stops = length(find(tracks.speed <= 1));
+tracks.runs = length(find(tracks.speed > 3.5));
 
-
-        stopcount = stopcount + 1;
-
-       if stopcount > 50
-
-            stops = stops + 1;
-
-            stopcount = 0;
-
-
-       end
-
-    end
-
-end
-
-
-tracks.stops = stops;
-
-%Find total number of runs
-    for i = 1:length(tracks.speed)
-
-
-    if tracks.speed(i) > 5 %run thereshold
-
-
-        runcount = runcount + 1;
-
-       if runcount > 50
-
-            runs = runs +1;
-            runcount = 0;
-
-       end
-
-    end
-  end
-tracks.runs = runs;
 end
 
 
@@ -565,8 +528,6 @@ hold off
                      hold on;
                      t = length(tracks.dis2center);
 
-
-
                     plot([1 t],[tracks.targetzoneouter,tracks.targetzoneouter],'m');
                      plot([1 t],[tracks.targetzoneinner,tracks.targetzoneinner],'b');%Draw a line intersection the target zone
                     plot(tracks.dis2center,'r');
@@ -629,7 +590,7 @@ hold off
                       annotation('textbox',dim,'FitBoxToText','on','LineStyle','none','String',str);
 
                       str2 = num2str(tracks.runs);
-                      str1 = 'Number of runs: ';
+                      str1 = 'Number of runs :';
                       str = strcat(str1,str2);
                       dim = [.15 .4 .7 .45];
                       annotation('textbox',dim,'FitBoxToText','on','LineStyle','none','String',str);
@@ -777,15 +738,15 @@ hold off
                       subplot(2,2,1);
                       bar(tracks.eachtimeino);
                       title('Each time span for outer zone');
+
+
+
                       for i1=1:numel(tracks.eachtimeino)
 
                           text(i1,tracks.eachtimeino(i1),num2str(tracks.eachtimeino(i1)),...
                                      'HorizontalAlignment','center',...
                                      'VerticalAlignment','bottom')
                       end
-
-
-
 
 
                       filename = 'Parameters3.fig';
