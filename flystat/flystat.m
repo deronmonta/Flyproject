@@ -121,7 +121,7 @@ disp('Average Correct Decisions Made');
 disp(popstat.avgcorrectd);
 disp('Average Wrong Decisions Made');
 disp(popstat.avgwrongd);
-disp('Runs')
+disp('Avg Runs')
 disp(popstat.avgruns);
 
 % disp (popstat.avginnertime);

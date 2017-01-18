@@ -39,7 +39,7 @@ end
       disp('Wrong Decisions');
       disp(popstat.avgwrongd);
       disp('Runs');
-      disp(popstat.runs); 
+      disp(popstat.avgruns);
 
       stats.filelength = [stats.filelength; length(popstat.dis2center)];
       stats.innerspeed = [stats.innerspeed;popstat.avginnerspeed];
@@ -54,17 +54,18 @@ end
       stats.stops = [stats.stops;popstat.avgstops];
     end
 end
-
 %recalculate parameters
 function stats = calculations(stats)
+  stats.runs
+
   stats.totald = stats.correctd + stats.wrongd;
   stats.avgd = stats.filelength ./ stats.totald;% Average frames needed to make one decision
   stats.avgwd = stats.filelength ./ stats.wrongd;%Average frames needed to make one wrong decision
   stats.avgcd = stats.filelength ./ stats.correctd;%Average frames needed to make one right decision
 
-  stats.runs = stats.runs ./ stats.filelength;
-  stats.stops = stats.stops ./ stats.filelength;
-
+  stats.runs = stats.filelength./stats.runs;
+  stats.stops = stats.filelength ./ stats.stops;
+stats.filelength
 end
 
 
