@@ -4,13 +4,9 @@
 
 %Output one condition at a time e.g. 1 hour dessication as a population
 
-function flystat()
+function flystatauto(myDir,savedir,hours)
 
-prompt = 'Enter hour of desiccation\n';
-hours = input(prompt);
-
-
-myDir = uigetdir;
+savedir = savedir;
 myfiles = dir(fullfile(myDir,'*.mat'));
 popstat = struct('filenum',[],'dis2center',[],'attraction',[],'avgattraction',[],'speed',[],'avgspeed',[],'innerspeed',[],...
 				'midspeed',[],'outerspeed',[],'avginnerspeed',[],'avgmidspeed',[],'avgouterspeed',[],'avginnertime',[],'avgmidtime',[],'avgoutertime',[],...
@@ -87,7 +83,7 @@ disp(myDir);
 
 %-----------------------list of subfunctions ---------------------
 popstat = statprocess(popstat);
-resultsdisplay(popstat);
+resultsdisplay(popstat,savedir);
 %--------------------subfunctions list ends here -------------------
 
 
@@ -107,7 +103,7 @@ end
 
 
 
-function resultsdisplay(popstat) %Display the results
+function resultsdisplay(popstat,savedir) %Display the results
 
 
 saveDir = 'C:\Users\deron\Documents\MATLAB\Wildtype\Popstat_file\04712';%Get saving directory
