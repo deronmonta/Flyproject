@@ -12,84 +12,92 @@ properties
     dzone_inner_radius = 50;%dzone stands for decision zone
     dzone_outer_radius = 100;
 
-<<<<<<< HEAD
-    properties
+      %These are variables that need to be inputed from other files
       filename;
       id;
       date;
       genotype;
       wholepos;
       desiccation_hr;
-      plate_center;
-      plate_radius;
-      tzone_inner_radius;%tzone stands for target zone
-      tzone_mid_radius;
-      tzone_outer_radius;
-      center;
+      src_dir;
+      save_dir;
+
+      %These variables could be obtained by calling self methods
       dis2center;
       speed;
       zone;%the posistion status of fly in each frame
-      dzone_inner_radius;%dzone stands for decision zone
-      dzone_outer_radius;
-      file_dir;
+
+
   end
 
 
   methods
-    function  self = Fly(tracks)%This is the constructor of fly object
 
-      self.id = track;
-
-    end
-
-    function self = correction(self)
-    end
-
-    function self = zoneidentify(self)
-    end
-
-    function self = displayresults(self)
-=======
-    filename;
-    id;
-    datecreated;
-    wholepos;
-    genotype;
-    desiccation_hr;
-    dis2center;
-    speed;
-    zone;%the posistion status of fly in each frame
-    %Dzone related parameters
-    src_dir;
-    save_dir;
-  end
-
-
-methods
 
 function  self = Fly()%This is the constructor for the object
 
   self;
->>>>>>> origin/master
 
 end
 
-function self = assignment(self,fname, dest, geno, wholepos, srcdir, savedir)
+function self = assignment(self, fname, id, date, dest, geno, wholepos, srcdir, savedir)% Assign variables to the object
   self.filename = fname;
   self.desiccation_hr = dest;
   self.genotype = geno;
   self.wholepos = wholepos;
   self.src_dir = srcdir;
   self.save_dir = savedir;
+  self.date = date;
+  self.id = id;
 end
 
-function self = correction()% This function is called every time
 
 
+function self = correction(self)% This function is called every time
+
+  totalframe = length(self.wholepos)
+    self.dis2center = zeros(totalframe);
+
+    for i = 1 : totalframe
+
+      self.dis2center(i) = sqrt(sum((self.wholepos(i,:) - self.center(1,:)).^2));
+
+
+    end
 end
+
+
+
 
 
 function self = zoneid(self) % For identifying each zone
+
+  for k = 1 : length(self.dis2center)
+
+
+%Find the total zonetime and identify if fly is target zone and assign
+%bolean to all dis2center
+if (self.dis2center(k) < tracks.tzone_inner_radius)%The radius of the inner target zone
+
+  self.zone = [self.zone;'i'];%Identify each which of the three zones the fly is in, i == inner, o == outer, m == mid
+
+end
+
+if (self.dis2center(k) > tracks.tzone_inner_radius && self.dis2center(k) < tzone_outer_radius)% Find the frame at whcih the fly is at mid zone
+
+
+  self.zone = [self.zone;'m'];
+
+end
+
+if (self.dis2center(k) > tzone_outer_radius) %Find the frame at which the fly is at outter zone
+
+   self.zone = [self.zone;'o'];
+
+  end
+
+
+  end
 
 end
 

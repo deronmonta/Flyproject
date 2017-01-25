@@ -79,7 +79,6 @@ totalframe = length(tracks.wholepos)
 
 tracks.dis2center(i) = sqrt(sum((tracks.wholepos(i,:)-tracks.center(1,:)).^2));
 
-
   end
 
 end
