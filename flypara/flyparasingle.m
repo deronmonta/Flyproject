@@ -7,10 +7,10 @@ function flyparasingle()
 
 prompt = 'Enter file name\n';
 wholepos =[];
-tracks = struct('fname',[],'wholepos',[],'dis2center',[],'speed',[],'angspeed',[],'innertimespan',[],'midtimespan',[],'attraction',[],'zonet',[],'runs',[],...
-                'stops',[],'isini',[],'center',[],'radius',[],'targetzoneouter',[],'isinm',[],'sharpturn',[],...
-                'isino',[],'innerspeed',[],'midspeed',[],'outerspeed',[],'inindex',[],'outindex',[],'midindex',[],'zone',[],...
-                'dzonein',[],'dzoneout',[],'dzone',[],'correctd',[],'wrongd',[],'eachtimeini',[],'eachtimeinm',[],'eachtimeino',[]);
+tracks = struct('fname',[],'wholepos',[],'dis2center',[],'speed',[],'angspeed',[],'innertimespan',[],'midtimespan',[],'attraction',[],'zonet',[],...
+                'isini',[],'center',[],'radius',[],'targetzoneouter',[],'isinm',[],'sharpturn',[],...
+                'isino',[],'innerspeed',[],'midspeed',[],'outerspeed',[],'inindex',[],'outindex',[],'midindex',[],'zone',[],'runs',[],'stops',[],...
+                'dzonein',[],'dzoneout',[],'dzone',[],'correctd',[],'wrongd',[],'eachtimeini',[],'eachtimeinm',[],'eachtimeino',[],'savedir',[],'attraction2',[]);
 tracks.center = [250 250];%Change the center of the dish here
 tracks.radius = 260;% Change the radius of the plate here
 tracks.targetzoneinner = 100;% Change this variable to reidentify the inner target zone.
@@ -18,9 +18,12 @@ tracks.targetzoneouter = 200;% Change this variable to reidentify the outter tar
 tracks.dzoneri = 70; %This is the radius of inner decision zone
 tracks.dzonero = 100; % This is the radius of outer decision zone
 
-
+disp('Choose inputfile');
 str = uigetfile;
 load(str);
+disp ('Choose output directory');
+savedir = uigetdir;
+tracks.save_dir = savedir;
 tracks.fname = str;
 tracks.wholepos = wholepos;
 
@@ -38,12 +41,13 @@ disp(realtime);
 
 %---------------All the subfunctions below--------------------------------
 
+tracks.wholepos = wholepos;%Assign wholepos to tracks
 tracks = redefinetrack(tracks);
 tracks = correction(tracks);
-tracks = zonetime(tracks);
+tracks = zonetime(tracks);%catagorize positions to three zones
 tracks = timespan(tracks);
-%tracks = findrunstop(tracks);
-tracks = findaspeed(tracks);
+tracks = findtop(tracks);
+tracks = findaspeed(tracks);%Find the angular speed
 displayresults(tracks);
 exceloutput(tracks);
 replay(tracks);
@@ -86,15 +90,13 @@ diserror = find(tracks.dis2center > tracks.radius); % Get the indices of the err
 
 tracks.wholepos(diserror,:) = [];
 
-tracks.dis2center(:) = [];
-
+tracks.dis2center = [];
 for i = 1 : length(tracks.wholepos)
 
 tracks.dis2center(i) = sqrt(sum((tracks.wholepos(i,:)-tracks.center(1,:)).^2));
 
 
-  end
-
+end
 
 tracks.speed =[];
 
@@ -111,8 +113,9 @@ end
 
 speederror = find(tracks.speed > 40);% Find speed error using new speed
 
-tracks.speedavg = tracks.speed;
-tracks.speedavg(speederror,:) = [];
+tracks.speed(speederror,:) = [];
+tracks.wholepos(speederror,:) = [];
+tracks.dis2center(speederror) = [];
 
 
 fprintf('dis2center');
@@ -133,7 +136,7 @@ timeenter= 0;
 timeexit = 0;
 tracks.isininner = [];
 tracks.isinouter = [];
-tracks.attraction = 0;
+tracks.attraction = [];
 
         for k = 1 : length(tracks.dis2center)
 
@@ -159,12 +162,19 @@ tracks.attraction = 0;
 
         end
 
+
         end
 
      tracks.inindex = find(tracks.zone == 'i');
     tracks.outindex = find(tracks.zone == 'o');
     tracks.midindex = find(tracks.zone == 'm');
-        tracks.attraction = length(tracks.inindex) / length(tracks.zone);
+    int = length(tracks.inindex);
+    midt = length(tracks.midindex);
+    outt= length(tracks.outindex);
+    r = tracks.targetzoneinner;
+    R = tracks.targetzoneouter;
+    tracks.attraction = int / length(tracks.zone);
+    tracks.attraction2 = ((int / r^2) - (midt/(R^2 - r^2)))/(int + midt/(R^2));   %This is the new attraction index
 
 
   %This part is for the decision zone
@@ -195,11 +205,14 @@ tracks.attraction = 0;
 
 tracks.correctd = 0;
 tracks.wrongd = 0;
+
+%There are two kinds of correct decision: 1. Going from mid zone to inner zone and 2. going from out zone to mid zone
+
 % If fly goes from mid dzone to inside dzone, it's a correct decision
 % If fly goes from mid dzone to outside dzone, it's a wrong decision
    for i = 1:(length(tracks.dzone)-1)
 
-        if (tracks.dzone(i) == 'm') && (tracks.dzone(i+1) == 'i') %From mid dzone to in dzone (correct decision)
+        if ((tracks.dzone(i) == 'm') && (tracks.dzone(i+1) == 'i'))
 
           disp(i);
           tracks.correctd = tracks.correctd + 1;
@@ -207,9 +220,12 @@ tracks.wrongd = 0;
 
         end
 
-        if (tracks.dzone(i) == 'm') && (tracks.dzone(i+1) == 'o')%From mid dzone to out dzone (wrong decision)
 
-            disp (i)
+
+        %From mid zone to outter zone or from inner zone to mid zone are wrong decisions
+        if ((tracks.dzone(i) == 'm') && (tracks.dzone(i+1) == 'o'))
+
+            disp(i);
            disp('Wrong decision');
            tracks.wrongd = tracks.wrongd + 1;
 
@@ -217,10 +233,11 @@ tracks.wrongd = 0;
 
     end
 
-    disp(length(tracks.speed));
-    disp(length(tracks.zone));
-    tracks.zone(end) = [];
 
+
+
+
+tracks.zone(end) = [];
 
      tracks.innerspeed = mean(tracks.speed(find(tracks.zone == 'i')));%This calculates the mean speed of the inner zone
      tracks.outerspeed = mean(tracks.speed(find(tracks.zone == 'o')));%This calculates the mean speed of the outer zone
@@ -230,9 +247,9 @@ end
 
 function tracks = timespan(tracks) %Find the timespan of fly spent in each zone
 
-tracks.isini = 0;
-tracks.isino = 0;
-tracks.isinm = 0;
+tracks.isini = [];
+tracks.isino = [];
+tracks.isinm = [];
     for i = 1 : (length(tracks.zone)-1)
 
       if tracks.zone(i) =='m' && tracks.zone(i+1) == 'i' %fly enters inneer zone coming from mid zone
@@ -242,7 +259,7 @@ tracks.isinm = 0;
       end
 
 
-      if (tracks.zone(i) == 'o' && tracks.zone(i+1) == 'm') ||(tracks.zone(i) == 'i' && tracks.zone(i+1) == 'm')%fly enters mid zone from inner zone or from outer zone
+      if (tracks.zone(i) == 'o' && tracks.zone(i+1) == 'm') || (tracks.zone(i) == 'i' && tracks.zone(i+1) == 'm')%fly enters mid zone from inner zone or from outer zone
 
         tracks.isinm = tracks.isinm + 1;
       end
@@ -255,16 +272,6 @@ tracks.isinm = 0;
 
     end
 
-    %Find consecutive items
-    % vector = diff(tracks.zone)
-    % vec2 = find([vector inf] > 1);%Find consecutive inner position
-    %
-    %
-    % tracks.eachtimeini = diff([0 vec2]);%the length of each indivdiual time span in inner zone
-    % tracks.eachtimeinm = diff([0 vec2])%mid zone
-    % tracks.eachtimeino = diff([0 vec2])%outer zone
-
-
 %----------------------------------Magic below, do not touch-------------------------
     reversezone = tracks.zone';%reverse column and rows
     reversezone(find(reversezone == 'i')) = '1';%asign numbers to zones instead of char
@@ -275,21 +282,21 @@ tracks.isinm = 0;
 
       inzone = (reversezone == '1');
       timestamps = [find(diff([-1 inzone -1]) ~= 0)];%Where the inzone change
-      runlength = diff(timestamps)
+      runlength = diff(timestamps);
       tracks.eachtimeini = runlength(1+(inzone(1) == 0 ):2:end);
 
 
       timestamps = [find(diff([-1 reversezone -1]) ~= 0)];%Where the tracks.zone change
       midzone = (reversezone =='2');
       timestamps = [find(diff([-1 midzone -1]) ~= 0)];%Where the midzone change
-      runlength = diff(timestamps)
+      runlength = diff(timestamps);
       tracks.eachtimeinm = runlength(1+(midzone(1) == 0):2:end);
 
 
       timestamps = [find(diff([-1 reversezone -1]) ~= 0)];%Where the tracks.zone change
       outzone = (reversezone =='3');
       timestamps = [find(diff([-1 outzone -1]) ~= 0)];%Where the outzone change
-      runlength = diff(timestamps)
+      runlength = diff(timestamps);
       tracks.eachtimeino = runlength(1 +(outzone(1) == 0):2:end);
 
 
@@ -306,196 +313,23 @@ disp(tracks.isino);
 
 
 end
-%      if ~isempty(tracks.inindex)
 
-%          tracks.inindex(end-1:end) = [];
-%      end
 
+%This function finds the  and stops of the fly according to the speed
 
-%     tracks.outindex = find(tracks.isininner == false);
-%       tracks.outindex(end-1:end) = [];
+function tracks = findtop(tracks)
 
-%     tracks.innerspeedin = mean(tracks.speed(tracks.inindex));
-%     tracks.innerspeedout = mean (tracks.speed(tracks.outindex));
 
+stopcount = 0;
+stops = 0;
+runcount = 0;
+runs = 0;
 
 
-%     fprintf('Attraction Index');
-%     disp(tracks.attraction);
+tracks.stops = length(find(tracks.speed <= 1));
+tracks.runs = length(find(tracks.speed > 3.5));
 
-%     disp innerspeedin;
-%     disp(tracks.innerspeedin);
-
-%    disp innerspeedout
-%     disp(tracks.innerspeedout);
-
-
-%Find each indivdiual time entered
-   % for k = 2:length(tracks.dis2center)
-
-%      if (tracks.dis2center(k-1) < tracks.targetzoneinner && tracks.dis2center(k) > tracks.targetzoneinner)
-
-%        timeexit = cat(1,timeexit,k);
-
-      % end
-
-%      if (tracks.dis2center(k-1) > tracks.targetzoneinner && tracks.dis2center(k) < tracks.targetzoneinner)
-
-%        timeenter = cat(1,timeenter,k);
-
-%     end
-
-%   end
-
-
-% % fprintf('The time entered:\n');
-% % disp(timeenter);
-% %
-% % fprintf('The time exit:\n');
-% % disp(timeexit);
-
-
-
-% %Make sure all the arrays are the same size and calculate each time span
-
-
-% tracks.outime = [];
-
-% for o = 2:length(timeenter)
-
-%    newout = timeenter (o)- timeenter(o-1);
-
-
-%    tracks.outime = [tracks.outime;newout];
-% end
-
-% disp(tracks.outime);
-
-% if tracks.dis2center(1) > tracks.targetzoneinner
-
-%     if length(timeexit) == length(timeenter)
-%       tracks.innertimespan = timeexit - timeenter;
-
-%     end
-
-%     if length(timeexit) < length(timeenter)
-%        timeenter(end,:) = [];
-%        tracks.innertimespan = timeexit - timeenter;
-
-%     end
-
-%     if length(timeexit) > length(timeenter)
-
-%     timeexit(end,:) = [];
-%     tracks.innertimespan = timeexit - timeenter;
-
-%     end
-% end
-
-
-
-%     if tracks.dis2center(1) < tracks.targetzoneinner
-
-%     if length(timeexit) == length(timeenter)
-
-%       tracks.outinnertimespan = timeexit - timeenter;
-%       tracks.innertimespan = timeenter - timeexit;
-
-%     end
-
-%     if length(timeexit) < length(timeenter)
-
-%        timeenter(end,:) = [];
-%        tracks.outinnertimespan = timeexit - timeenter;
-%         tracks.innertimespan = timeenter - timeexit;
-%     end
-
-%     if length(timeexit) > length(timeenter)
-
-%     timeexit(end,:) = [];
-%     tracks.innertimespan = timeexit - timeenter;
-%      tracks.innertimespan = timeenter - timeexit;
-
-%     end
-
-
-%     end
-
-
-
-% fprintf('Each time span:\n');
-% disp(tracks.innertimespan);
-
-% fprintf('Total Zone time\n');
-% disp(tracks.zonet);
-
-
-
-
-
-
-%This function finds the runs and stops of the fly according to the speed
-
-% function tracks = findrunstop(tracks)
-
-
-% stopcount = 0;
-% stops = 0;
-% runcount = 0;
-% runs = 0;
-% for i = 1:length(tracks.speed)
-
-
-%     if tracks.speed(i) < 2 % Stop thereshold
-
-
-%         stopcount = stopcount + 1;
-
-%        if stopcount > 50
-
-%             stops = stops + 1;
-
-%             stopcount = 0;
-
-
-%        end
-
-%     end
-
-% end
-
-
-% tracks.stops = stops;
-% disp stopcount;
-% disp(stopcount);
-
-% disp stops;
-% disp(stops);
-
-% %Find total number of runs
-%     for i = 1:length(tracks.speed)
-
-
-%     if tracks.speed(i) > 15 %run thereshold
-
-
-%         runcount = runcount + 1;
-
-%        if runcount > 50
-
-%             runs = runs +1;
-%             runcount = 0;
-
-%        end
-
-%     end
-%   end
-% tracks.runs = runs;
-% end
-
-
-
-
+end
 
 
 %Find the angle of the fly
@@ -669,7 +503,7 @@ plot(x2,y2,'r--');%Plot outter target zone
 
 filename = 'Tracks_results.fig';
 fig1 = strcat(tracks.fname,filename);% Saves the figure as file name + track results
-saveas(gcf,fig1);
+saveas(gcf,fullfile(tracks.savedir,fig1));
 
 
 hold off
@@ -688,8 +522,6 @@ hold off
 
                      hold on;
                      t = length(tracks.dis2center);
-
-
 
                     plot([1 t],[tracks.targetzoneouter,tracks.targetzoneouter],'m');
                      plot([1 t],[tracks.targetzoneinner,tracks.targetzoneinner],'b');%Draw a line intersection the target zone
@@ -753,12 +585,12 @@ hold off
                       annotation('textbox',dim,'FitBoxToText','on','LineStyle','none','String',str);
 
                       str2 = num2str(tracks.runs);
-                      str1 = 'Number of runs: ';
+                      str1 = 'Number of runs :';
                       str = strcat(str1,str2);
                       dim = [.15 .4 .7 .45];
                       annotation('textbox',dim,'FitBoxToText','on','LineStyle','none','String',str);
 
-                       str2 = num2str(tracks.stops);
+                      str2 = num2str(tracks.stops);
                       str1 = 'Number of stops:';
                       str = strcat(str1,str2);
                       dim = [.15 .4 .7 .475];
@@ -812,7 +644,7 @@ hold off
                       midt
                       tracks.isini
 
-                      avgi = midt/tracks.isini
+                      avgi = mean(tracks.eachtimeini);
                       str2 = num2str(avgi);
                       str1 = 'Average time spent in inner zone :  ';
                       str = strcat(str1,str2);
@@ -820,7 +652,7 @@ hold off
                       annotation('textbox',dim,'FitBoxToText','on','LineStyle','none','String',str);
 
 
-                      avgm = midt/tracks.isinm
+                      avgm = mean(tracks.eachtimeinm);
                       str2 = num2str(avgm);
                       str1 = 'Average time spent in mid zone :  ';
                       str = strcat(str1,str2);
@@ -828,16 +660,24 @@ hold off
                       annotation('textbox',dim,'FitBoxToText','on','LineStyle','none','String',str);
 
 
-                      avgo = midt/tracks.isino
+                      avgo = mean(tracks.eachtimeino);
                       str2 = num2str(avgo);
                       str1 = 'Average time spent in outer zone :  ';
                       str = strcat(str1,str2);
                       dim = [.3 .4 .7 .375];
                       annotation('textbox',dim,'FitBoxToText','on','LineStyle','none','String',str);
 
+
+                      str1 = num2str(tracks.attraction2);
+                      str2 = 'New Attraction Index : ';
+                      str = strcat(str2,str1);
+                      dim = [.3 .4 .7 .350];
+                      annotation('textbox',dim,'FitBoxToText','on','LineStyle','none','String',str);
+
+
                       filename = 'Parameters1.fig';
                       fig2 = strcat(tracks.fname,filename);% Saves the figure as file name + track results
-                      saveas(gcf,fig2);
+                      saveas(gcf,fullfile(tracks.savedir,fig2));
 
 
                       figure; %Next figure
@@ -860,9 +700,6 @@ hold off
                        bar(y,'y');
                        title('Time span for each zone');
                       set(gca,'xticklabel',names);
-                     filename = 'Parameters2.fig';
-                      fig3 = strcat(tracks.fname,filename);% Saves the figure as file name + track results
-                      saveas(gcf,fig3);
 
 
                       subplot(2,2,3);
@@ -875,16 +712,41 @@ hold off
                                      'VerticalAlignment','bottom')
                       end
 
+
+
+
                       subplot(2,2,4);
                       bar(tracks.eachtimeinm);
                       title('Each time time for mid zone');
+                      for i1=1:numel(tracks.eachtimeinm)
 
+                          text(i1,tracks.eachtimeinm(i1),num2str(tracks.eachtimeinm(i1)),...
+                                     'HorizontalAlignment','center',...
+                                     'VerticalAlignment','bottom')
+                      end
 
+                      filename = 'Parameters2.fig';
+                      fig3 = strcat(tracks.fname,filename);% Saves the figure as file name + track results
+                      saveas(gcf,fullfile(tracks.savedir,fig3));
 
                       figure;
                       subplot(2,2,1);
                       bar(tracks.eachtimeino);
                       title('Each time span for outer zone');
+
+
+
+                      for i1=1:numel(tracks.eachtimeino)
+
+                          text(i1,tracks.eachtimeino(i1),num2str(tracks.eachtimeino(i1)),...
+                                     'HorizontalAlignment','center',...
+                                     'VerticalAlignment','bottom')
+                      end
+
+
+                      filename = 'Parameters3.fig';
+                      fig4 = strcat(tracks.fname,filename);% Saves the figure as file name + track results
+                      saveas(gcf,fullfile(tracks.savedir,fig4));
                       end
 
 
@@ -910,6 +772,7 @@ xlswrite(xlsname4,outputaspeed);
 
 
 end
+
 
 %------------------------------------------------for flypar single only-------------------------------------------------
 

@@ -44,7 +44,7 @@ tracks.savedir = savedir;%This is the directory of where the files will be saved
 tracks.fname = myFiles(N).name;
 load(myFiles(N).name);
 
-%---------------All the subfunctions below--------------------------------
+%---------------List of subfunctions below--------------------------------
 tracks.wholepos = wholepos;%Assign wholepos to tracks
 tracks = redefinetrack(tracks);
 tracks = correction(tracks);
@@ -54,7 +54,7 @@ tracks = findtop(tracks);
 tracks = findaspeed(tracks);%Find the angular speed
 displayresults(tracks);
 exceloutput(tracks);
-%--------------------subfunctions end here-------------------------------
+%--------------------List of subfunctions end here-------------------------------
 
 %save tracks parameters
 trackfname = strcat(tracks.fname,'tracks.mat');
@@ -67,7 +67,7 @@ end
 end
 
 
-%subfunctions starts here
+%Subfunctions starts here
 %-------------------------------------------------------------------------------------------
 
 function tracks = redefinetrack(tracks)
