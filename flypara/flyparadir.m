@@ -181,8 +181,8 @@ tracks.attraction = [];
     tracks.attraction2 = ((int / r^2) - (midt/(R^2 - r^2)))/(int + midt/(R^2));   %This is the new attraction index
 
 
-  %This part is for the decision zone
- for k = 1 : length(tracks.dis2center)
+for k = 1 : length(tracks.dis2center)  %This part is for the decision zone
+
 
 
     if (tracks.dis2center(k) > tracks.dzonero)%The radius of the inner decision zone
@@ -203,7 +203,7 @@ tracks.attraction = [];
 
         end
 
-        end
+  end
 
 
 

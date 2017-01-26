@@ -22,4 +22,5 @@ id = 1;
 date = '1/25/2107';
 N = Fly();
 N = assignment(N,fname,id, date, hr, geno, wholepos, srcdir, savedir);
-N = correction(N);
+N = basiccal(N);
+N = zoneid(N);

@@ -16,7 +16,7 @@ if strcmp(wholepossubs(N).name,'0_hr')
   hours = 0;
   srcdir = 'C:\Users\deron\Documents\MATLAB\Wildtype\Wholepos_file\0_hr';
   savedir1 = 'C:\Users\deron\Documents\MATLAB\Wildtype\Tracks_file\0hr_'; %Save directory for flyparaauto; src directory for flystatauto
-  savedir2 = 'C:\Users\deron\Documents\MATLAB\Wildtype\Popstat_file'
+  savedir2 = 'C:\Users\deron\Documents\MATLAB\Wildtype\Popstat_file';
   flyparaauto(srcdir, savedir1);
   flystatauto(savedir1, savedir2, hours);
 
