@@ -169,7 +169,7 @@ tracks.attraction = [];
 
         end
 
-     tracks.inindex = find(tracks.zone == 'i');
+    tracks.inindex = find(tracks.zone == 'i');
     tracks.outindex = find(tracks.zone == 'o');
     tracks.midindex = find(tracks.zone == 'm');
     int = length(tracks.inindex);
