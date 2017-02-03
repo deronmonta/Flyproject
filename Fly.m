@@ -2,7 +2,7 @@
 %This could potentially be very heavy workload, but instead of having to use many scripts and functions
 %I think oop in the solution to all the problem
 
-classdef Fly
+classdef Fly < handle
 
 properties
     %Static variables
@@ -37,6 +37,9 @@ properties
       correctd;
       wrongd;
       dpercentage;
+      innerspeed;
+      midspeed;
+      outerspeed;
   end
 
 methods
@@ -208,6 +211,10 @@ self.dpercentage = self.correctd / (self.correctd + self.wrongd);
     self.eachtimeino = runlength(1 +(outzone(1) == 0):2:end);
     self.eachtimeino = self.eachtimeino';
 
+    self.zone(end) = [];
+    self.innerspeed = mean(self.speed(find(self.zone == 'i')));%This calculates the mean speed of the inner zone
+    self.outerspeed = mean(self.speed(find(self.zone == 'o')));%This calculates the mean speed of the outer zone
+    self.midspeed = mean(self.speed(find(self.zone == 'm')));%This calculates the mean speed of the mid zone
 
 end
 %---------------------------------------------------------------------------------------------------

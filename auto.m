@@ -14,13 +14,12 @@ wholepossrc = uigetdir;
 
 wholepossubs = dir(wholepossrc)
 flies = [];
-savedir = 'C:\Users\Bayesian\Documents\MATLAB\Wildtype\Flyobj';
+savedir = uigetdir;
 for N = 1:length(wholepossubs) %Loop through every sub folder    || ~(wholepossubs(N).name == '..')
   fly = [];
   if ~(wholepossubs(N).name == '.')
     geno = 'Wildtype';
     % file_names = files.name;
-    savedir = 'C:\Users\Bayesian\Documents\MATLAB\Wildtype\Flyobj';
     disp(wholepossubs(N).name);
     files = dir(fullfile(wholepossubs(N).name,'*.mat'))
 
