@@ -23,8 +23,10 @@ properties
       src_dir;
       save_dir;
       %These variables could be obtained by calling self methods
+      totalframe;
       dis2center;
       speed;
+      avgspeed;
       zone;%the posistion status of fly in each frame
       dzone%the decision posistion status of fly
       stops;
@@ -33,13 +35,18 @@ properties
       eachtimeini;
       eachtimeinm;
       eachtimeino;
-      totalframe;
+      totald;
       correctd;
       wrongd;
       dpercentage;
       innerspeed;
       midspeed;
       outerspeed;
+      angle;
+      sharpturn;
+
+
+
   end
 
 methods
@@ -85,8 +92,9 @@ function self = basiccal(self)% This function is called every time
 
         self.speed = [self.speed;sqrt(sum((self.wholepos(i,:)-self.wholepos((i-1),:)).^2))];
 
-
     end
+
+self.avgspeed = mean(self.speed);
 
 end
 %---------------------------------------------------------------------------------------------------
@@ -144,13 +152,13 @@ function self = zoneid(self) % For identifying each zone
        self.zone = [self.zone;'o'];
     end%
   end
-inindex = find(self.zone == 'i');
-midindex = find(self.zone == 'm');
-outindex = find(self.zone == 'o');
-intime = length(inindex);
-midt = length(midindex);
-outt = length(outindex);
-self.attraction = intime / length(self.zone);
+    inindex = find(self.zone == 'i');
+    midindex = find(self.zone == 'm');
+    outindex = find(self.zone == 'o');
+    intime = length(inindex);
+    midt = length(midindex);
+    outt = length(outindex);
+    self.attraction = intime / length(self.zone);
 
 
 %This part is for the decision zone
@@ -184,7 +192,7 @@ self.attraction = intime / length(self.zone);
   end
 
 self.dpercentage = self.correctd / (self.correctd + self.wrongd);
-
+self.totald = self.correctd + self.wrongd;
 
 %This is for calculting the time span fly spent in each zone
     reversezone = self.zone';%reverse column and rows
@@ -229,10 +237,30 @@ function self = findrunstop(self)
 end
 %---------------------------------------------------------------------------------------------------
 
+function self = findangle(self)
+
+tenth = self.wholepos(1:10:length(self.wholepos),:);
+
+    for i = 2:length(tenth)
+      if i < length(tenth)
+        vec2 = [tenth(i,:)-tenth(i-1,:),0];
+        vec = [tenth(i+1,:)-tenth(i,:),0];
+      end
+        angle =  (atan2d(norm(cross(vec,vec2)),dot(vec,vec2)));
+      if ~(angle == 0)
+      self.angle= [self.angle;angle];
+      self.sharpturn = numel(find(self.angle > 90));
+      end
+        % self.sharpturn(:,2) = self.angle(find(self.angle > 90));
+    end
+
+end
+
 %---------------------------------------------------------------------------------------------------
 function savemat(self)
 
   save(fullfile(self.save_dir, self.filename),'self');
+
 
 end
 %---------------------------------------------------------------------------------------------------

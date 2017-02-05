@@ -65,6 +65,7 @@ for N = 1:length(wholepossubs) %Loop through every sub folder    || ~(wholepossu
       fly(k) = correction(fly(k));
       fly(k) = zoneid(fly(k));
       fly(k) = findrunstop(fly(k));
+      fly(k) = findangle(fly(k));
       flies = [flies;fly(k)];
    end
  end
