@@ -12,165 +12,204 @@ six_hr_fly = [];
 seven_hr_fly = [];
 eight_hr_fly = [];
 nine_hr_fly = [];
+ten_hr_fly = [];
+eleven_hr_fly = [];
 twlve_hr_fly = [];
 hr = [];
 attraction = [];
 
-zero_hr_fly = findobj(flies,'desiccation_hr',0);
-one_hr_fly = findobj(flies,'desiccation_hr',1);
-two_hr_fly = findobj(flies,'desiccation_hr',2);
-three_hr_fly = findobj(flies,'desiccation_hr',3);
-four_hr_fly = findobj(flies,'desiccation_hr',4);
-five_hr_fly = findobj(flies,'desiccation_hr',5);
-six_hr_fly = findobj(flies,'desiccation_hr',6);
-seven_hr_fly = findobj(flies,'desiccation_hr',7);
-eight_hr_fly = findobj(flies,'desiccation_hr',8);
-nine_hr_fly = findobj(flies,'desiccation_hr',9);
-twlve_hr_fly = findobj(flies,'desiccation_hr',12);
-one_hr_fly = [one_hr_fly];
+zero_hr_fly = findobj(flydatabase,'desiccation_hr',0,'genotype','Wildtype');
+one_hr_fly = findobj(flydatabase,'desiccation_hr',1,'genotype','Wildtype');
+two_hr_fly = findobj(flydatabase,'desiccation_hr',2,'genotype','Wildtype');
+three_hr_fly = findobj(flydatabase,'desiccation_hr',3,'genotype','Wildtype');
+four_hr_fly = findobj(flydatabase,'desiccation_hr',4,'genotype','Wildtype');
+five_hr_fly = findobj(flydatabase,'desiccation_hr',5,'genotype','Wildtype');
+six_hr_fly = findobj(flydatabase,'desiccation_hr',6,'genotype','Wildtype');
+seven_hr_fly = findobj(flydatabase,'desiccation_hr',7,'genotype','Wildtype');
+eight_hr_fly = findobj(flydatabase,'desiccation_hr',8,'genotype','Wildtype');
+nine_hr_fly = findobj(flydatabase,'desiccation_hr',9,'genotype','Wildtype');
+ten_hr_fly = findobj(flydatabase,'desiccation_hr',10,'genotype','Wildtype');
+eleven_hr_fly = findobj(flydatabase,'desiccation_hr',11,'genotype','Wildtype');
+twlve_hr_fly = findobj(flydatabase,'desiccation_hr',12,'genotype','Wildtype');
+rna_fly = findobj(flydatabase,'genotype','IR40aRNAi');
+no_water = findobj(flydatabase,'genotype','Wildtype, No water control');
 % one_hr_fly.zone = [one_hr_fly.zone']
 % Atrraction1 = find([one_hr_fly.zone] == 'i')/length([one_hr_fly.zone])
 
 
-attractionavg = [nanmean([zero_hr_fly.attraction])
-nanmean([one_hr_fly.attraction])
-nanmean([two_hr_fly.attraction])
-nanmean([three_hr_fly.attraction])
-nanmean([four_hr_fly.attraction])
-nanmean([five_hr_fly.attraction])
-nanmean([six_hr_fly.attraction])
-nanmean([seven_hr_fly.attraction])
-nanmean([eight_hr_fly.attraction])
- nanmean([nine_hr_fly.attraction])
-nanmean([twlve_hr_fly.attraction])];
+attractionavg = [nanmedian([zero_hr_fly.attraction])
+nanmedian([one_hr_fly.attraction])
+nanmedian([two_hr_fly.attraction])
+nanmedian([three_hr_fly.attraction])
+nanmedian([four_hr_fly.attraction])
+nanmedian([five_hr_fly.attraction])
+nanmedian([six_hr_fly.attraction])
+nanmedian([seven_hr_fly.attraction])
+nanmedian([eight_hr_fly.attraction])
+nanmedian([nine_hr_fly.attraction])
+nanmedian([ten_hr_fly.attraction])
+nanmedian([eleven_hr_fly.attraction])
+nanmedian([twlve_hr_fly.attraction])];
 
-dpercentageavg = [nanmean([zero_hr_fly.dpercentage])
-nanmean([one_hr_fly.dpercentage])
-nanmean([two_hr_fly.dpercentage])
-nanmean([three_hr_fly.dpercentage])
-nanmean([four_hr_fly.dpercentage])
-nanmean([five_hr_fly.dpercentage])
-nanmean([six_hr_fly.dpercentage])
-nanmean([seven_hr_fly.dpercentage])
-nanmean([eight_hr_fly.dpercentage])
-nanmean([nine_hr_fly.dpercentage])
-nanmean([twlve_hr_fly.dpercentage])];
+dpercentageavg = [nanmedian([zero_hr_fly.dpercentage])
+nanmedian([one_hr_fly.dpercentage])
+nanmedian([two_hr_fly.dpercentage])
+nanmedian([three_hr_fly.dpercentage])
+nanmedian([four_hr_fly.dpercentage])
+nanmedian([five_hr_fly.dpercentage])
+nanmedian([six_hr_fly.dpercentage])
+nanmedian([seven_hr_fly.dpercentage])
+nanmedian([eight_hr_fly.dpercentage])
+nanmedian([nine_hr_fly.dpercentage])
+nanmedian([ten_hr_fly.dpercentage])
+nanmedian([eleven_hr_fly.dpercentage])
+nanmedian([twlve_hr_fly.dpercentage])];
 
-speedavg = [nanmean([zero_hr_fly.avgspeed])
-nanmean([one_hr_fly.avgspeed])
-nanmean([two_hr_fly.avgspeed])
-nanmean([three_hr_fly.avgspeed])
-nanmean([four_hr_fly.avgspeed])
-nanmean([five_hr_fly.avgspeed])
-nanmean([six_hr_fly.avgspeed])
-nanmean([seven_hr_fly.avgspeed])
-nanmean([eight_hr_fly.avgspeed])
-nanmean([nine_hr_fly.avgspeed])
-nanmean([twlve_hr_fly.avgspeed])];
+speedavg = [nanmedian([zero_hr_fly.avgspeed])
+nanmedian([one_hr_fly.avgspeed])
+nanmedian([two_hr_fly.avgspeed])
+nanmedian([three_hr_fly.avgspeed])
+nanmedian([four_hr_fly.avgspeed])
+nanmedian([five_hr_fly.avgspeed])
+nanmedian([six_hr_fly.avgspeed])
+nanmedian([seven_hr_fly.avgspeed])
+nanmedian([eight_hr_fly.avgspeed])
+nanmedian([nine_hr_fly.avgspeed])
+nanmedian([twlve_hr_fly.avgspeed])];
 
-sharpturns = [nanmean([zero_hr_fly.sharpturn])
-nanmean([one_hr_fly.sharpturn])
-nanmean([two_hr_fly.sharpturn])
-nanmean([three_hr_fly.sharpturn])
-nanmean([four_hr_fly.sharpturn])
-nanmean([five_hr_fly.sharpturn])
-nanmean([six_hr_fly.sharpturn])
-nanmean([seven_hr_fly.sharpturn])
-nanmean([eight_hr_fly.sharpturn])
-nanmean([nine_hr_fly.sharpturn])
-nanmean([twlve_hr_fly.sharpturn])];
+sharpturns = [nanmedian([zero_hr_fly.sharpturn])
+nanmedian([one_hr_fly.sharpturn])
+nanmedian([two_hr_fly.sharpturn])
+nanmedian([three_hr_fly.sharpturn])
+nanmedian([four_hr_fly.sharpturn])
+nanmedian([five_hr_fly.sharpturn])
+nanmedian([six_hr_fly.sharpturn])
+nanmedian([seven_hr_fly.sharpturn])
+nanmedian([eight_hr_fly.sharpturn])
+nanmedian([nine_hr_fly.sharpturn])
+nanmedian([twlve_hr_fly.sharpturn])];
 
-innerspeed = [nanmean([[zero_hr_fly.innerspeed]])
-nanmean([one_hr_fly.innerspeed])
-nanmean([two_hr_fly.innerspeed])
-nanmean([three_hr_fly.innerspeed])
-nanmean([four_hr_fly.innerspeed])
-nanmean([five_hr_fly.innerspeed])
-nanmean([six_hr_fly.innerspeed])
-nanmean([seven_hr_fly.innerspeed])
-nanmean([eight_hr_fly.innerspeed])
-nanmean([nine_hr_fly.innerspeed])
-nanmean([twlve_hr_fly.innerspeed])];
+innerspeed = [nanmedian([[zero_hr_fly.innerspeed]])
+nanmedian([one_hr_fly.innerspeed])
+nanmedian([two_hr_fly.innerspeed])
+nanmedian([three_hr_fly.innerspeed])
+nanmedian([four_hr_fly.innerspeed])
+nanmedian([five_hr_fly.innerspeed])
+nanmedian([six_hr_fly.innerspeed])
+nanmedian([seven_hr_fly.innerspeed])
+nanmedian([eight_hr_fly.innerspeed])
+nanmedian([nine_hr_fly.innerspeed])
+nanmedian([ten_hr_fly.innerspeed])
+nanmedian([eleven_hr_fly.innerspeed])
+nanmedian([twlve_hr_fly.innerspeed])];
 
-midspeed = [nanmean([[zero_hr_fly.midspeed]])
-nanmean([one_hr_fly.midspeed])
-nanmean([two_hr_fly.midspeed])
-nanmean([three_hr_fly.midspeed])
-nanmean([four_hr_fly.midspeed])
-nanmean([five_hr_fly.midspeed])
-nanmean([six_hr_fly.midspeed])
-nanmean([seven_hr_fly.midspeed])
-nanmean([eight_hr_fly.midspeed])
-nanmean([nine_hr_fly.midspeed])
-nanmean([twlve_hr_fly.midspeed])];
+midspeed = [nanmedian([[zero_hr_fly.midspeed]])
+nanmedian([one_hr_fly.midspeed])
+nanmedian([two_hr_fly.midspeed])
+nanmedian([three_hr_fly.midspeed])
+nanmedian([four_hr_fly.midspeed])
+nanmedian([five_hr_fly.midspeed])
+nanmedian([six_hr_fly.midspeed])
+nanmedian([seven_hr_fly.midspeed])
+nanmedian([eight_hr_fly.midspeed])
+nanmedian([nine_hr_fly.midspeed])
+nanmedian([twlve_hr_fly.midspeed])];
 
-totaldecisions = [nanmean([[zero_hr_fly.totald]])
-nanmean([one_hr_fly.totald])
-nanmean([two_hr_fly.totald])
-nanmean([three_hr_fly.totald])
-nanmean([four_hr_fly.totald])
-nanmean([five_hr_fly.totald])
-nanmean([six_hr_fly.totald])
-nanmean([seven_hr_fly.totald])
-nanmean([eight_hr_fly.totald])
-nanmean([nine_hr_fly.totald])
-nanmean([twlve_hr_fly.totald])];
+totaldecisions = [nanmedian([[zero_hr_fly.totald]])
+nanmedian([one_hr_fly.totald])
+nanmedian([two_hr_fly.totald])
+nanmedian([three_hr_fly.totald])
+nanmedian([four_hr_fly.totald])
+nanmedian([five_hr_fly.totald])
+nanmedian([six_hr_fly.totald])
+nanmedian([seven_hr_fly.totald])
+nanmedian([eight_hr_fly.totald])
+nanmedian([nine_hr_fly.totald])
+nanmedian([ten_hr_fly.totald])
+nanmedian([eleven_hr_fly.totald])
+nanmedian([twlve_hr_fly.totald])];
 
-correctd = [nanmean([[zero_hr_fly.correctd]])
-nanmean([one_hr_fly.correctd])
-nanmean([two_hr_fly.correctd])
-nanmean([three_hr_fly.correctd])
-nanmean([four_hr_fly.correctd])
-nanmean([five_hr_fly.correctd])
-nanmean([six_hr_fly.correctd])
-nanmean([seven_hr_fly.correctd])
-nanmean([eight_hr_fly.correctd])
-nanmean([nine_hr_fly.correctd])
-nanmean([twlve_hr_fly.correctd])];
+correctd = [nanmedian([[zero_hr_fly.correctd]])
+nanmedian([one_hr_fly.correctd])
+nanmedian([two_hr_fly.correctd])
+nanmedian([three_hr_fly.correctd])
+nanmedian([four_hr_fly.correctd])
+nanmedian([five_hr_fly.correctd])
+nanmedian([six_hr_fly.correctd])
+nanmedian([seven_hr_fly.correctd])
+nanmedian([eight_hr_fly.correctd])
+nanmedian([nine_hr_fly.correctd])
+nanmedian([twlve_hr_fly.correctd])];
 
+runsavg = [nanmedian([zero_hr_fly.runs])
+nanmedian([one_hr_fly.runs])
+nanmedian([two_hr_fly.runs])
+nanmedian([three_hr_fly.runs])
+nanmedian([four_hr_fly.runs])
+nanmedian([five_hr_fly.runs])
+nanmedian([six_hr_fly.runs])
+nanmedian([seven_hr_fly.runs])
+nanmedian([eight_hr_fly.runs])
+nanmedian([nine_hr_fly.runs])
+nanmedian([ten_hr_fly.runs])
+nanmedian([eleven_hr_fly.runs])
+nanmedian([twlve_hr_fly.runs])];
 
+stopsavg = [nanmedian([zero_hr_fly.stops])
+nanmedian([one_hr_fly.stops])
+nanmedian([two_hr_fly.stops])
+nanmedian([three_hr_fly.stops])
+nanmedian([four_hr_fly.stops])
+nanmedian([five_hr_fly.stops])
+nanmedian([six_hr_fly.stops])
+nanmedian([seven_hr_fly.stops])
+nanmedian([eight_hr_fly.stops])
+nanmedian([nine_hr_fly.stops])
+nanmedian([ten_hr_fly.stops])
+nanmedian([eleven_hr_fly.stops])
+nanmedian([twlve_hr_fly.stops])];
 
-% for N = 1 : length(flies)
-%   if flies(N).desiccation_hr == 0
-%     zero_hr_fly = [zero_hr_fly;flies(N)];
+% for N = 1 : length(flydatabase)
+%   if flydatabase(N).desiccation_hr == 0
+%     zero_hr_fly = [zero_hr_fly;flydatabase(N)];
 %   end
-%   if flies(N).desiccation_hr == 1
-%     one_hr_fly = [one_hr_fly;flies(N)];
+%   if flydatabase(N).desiccation_hr == 1
+%     one_hr_fly = [one_hr_fly;flydatabase(N)];
 %   end
-%   if flies(N).desiccation_hr == 2
-%     two_hr_fly = [two_hr_fly;flies(N)];
+%   if flydatabase(N).desiccation_hr == 2
+%     two_hr_fly = [two_hr_fly;flydatabase(N)];
 %   end
-%   if flies(N).desiccation_hr == 3
-%     three_hr_fly = [three_hr_fly;flies(N)];
+%   if flydatabase(N).desiccation_hr == 3
+%     three_hr_fly = [three_hr_fly;flydatabase(N)];
 %   end
-%   if flies(N).desiccation_hr == 4
-%     four_hr_fly = [four_hr_fly;flies(N)];
+%   if flydatabase(N).desiccation_hr == 4
+%     four_hr_fly = [four_hr_fly;flydatabase(N)];
 %   end
-%   if flies(N).desiccation_hr == 5
-%     five_hr_fly = [five_hr_fly;flies(N)];
+%   if flydatabase(N).desiccation_hr == 5
+%     five_hr_fly = [five_hr_fly;flydatabase(N)];
 %   end
-%   if flies(N).desiccation_hr == 6
-%     six_hr_fly = [six_hr_fly;flies(N)];
+%   if flydatabase(N).desiccation_hr == 6
+%     six_hr_fly = [six_hr_fly;flydatabase(N)];
 %   end
-%   if flies(N).desiccation_hr == 7
-%     seven_hr_fly = [seven_hr_fly;flies(N)];
+%   if flydatabase(N).desiccation_hr == 7
+%     seven_hr_fly = [seven_hr_fly;flydatabase(N)];
 %   end
-%   if flies(N).desiccation_hr == 8
-%     eight_hr_fly = [eight_hr_fly;flies(N)];
+%   if flydatabase(N).desiccation_hr == 8
+%     eight_hr_fly = [eight_hr_fly;flydatabase(N)];
 %   end
-%   if flies(N).desiccation_hr == 9
-%     nine_hr_fly = [nine_hr_fly;flies(N)];
+%   if flydatabase(N).desiccation_hr == 9
+%     nine_hr_fly = [nine_hr_fly;flydatabase(N)];
 %   end
-%   if flies(N).desiccation_hr == 12
-%     twlve_hr_fly = [twlve_hr_fly;flies(N)];
+%   if flydatabase(N).desiccation_hr == 12
+%     twlve_hr_fly = [twlve_hr_fly;flydatabase(N)];
 %   end %Group in to different desiccation hours Group by different hours
 % end
 
-for K = 1 : length(flies) %Sort by desiccation hours
-  hr = [hr;flies(K).desiccation_hr];
-  speed = [dpercentage;flies(K).dpercentage];
-  attraction = [attraction;flies(K).attraction];
-end
+% for K = 1 : length(flydatabase) %Sort by desiccation hours
+%   hr = [hr;flydatabase(K).desiccation_hr];
+%   speed = [dpercentage;flydatabase(K).dpercentage];
+%   attraction = [attraction;flydatabase(K).attraction];
+% end
 
 
 % scatter(hr,dpercentage);

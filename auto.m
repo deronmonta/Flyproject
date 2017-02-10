@@ -43,11 +43,18 @@ for N = 1:length(wholepossubs) %Loop through every sub folder    || ~(wholepossu
       hours = 8;
     elseif strcmp(wholepossubs(N).name,'9_hr')
       hours = 9;
+    elseif strcmp(wholepossubs(N).name,'10_hr')
+      hours = 10
+    elseif strcmp(wholepossubs(N).name,'11_hr')
+      hours = 11
     elseif strcmp(wholepossubs(N).name,'12_hr')
       hours = 12;
     elseif strcmp(wholepossubs(N).name,'no water control')
       hours = 12;
       geno = 'Wildtype, No water control';
+    elseif strcmp(wholepossubs(N).name,'IR40aRNAi')
+      hours = 8;
+      geno = 'IR40aRNAi';
     end
 
     for k = 1:length(files) %Loop through files in sub folder
@@ -70,5 +77,5 @@ for N = 1:length(wholepossubs) %Loop through every sub folder    || ~(wholepossu
    end
  end
 
-save(fullfile(savedir,'flies'),'flies');
+save(fullfile(savedir,'fliesdatabase1'),'flies');
 end

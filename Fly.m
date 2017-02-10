@@ -6,8 +6,8 @@ classdef Fly < handle
 
 properties
     %Static variables
-      plate_radius = 250;
-      tzone_inner_radius = 75;%tzone stands for target zone
+      plate_radius = 260;
+      tzone_inner_radius = 50;%tzone stands for target zone
       tzone_outer_radius = 240;
       center = [250 250];
       dzone_inner_radius = 50;%dzone stands for decision zone
@@ -44,6 +44,7 @@ properties
       outerspeed;
       angle;
       sharpturn;
+      dperframe;
 
 
 
@@ -88,7 +89,6 @@ function self = basiccal(self)% This function is called every time
     self.speed = zeros(self.totalframe - 1, 1);
 
     for i = 2:length(self.wholepos)
-
 
         self.speed = [self.speed;sqrt(sum((self.wholepos(i,:)-self.wholepos((i-1),:)).^2))];
 
@@ -138,6 +138,7 @@ end
 %---------------------------------------------------------------------------------------------------
 function self = zoneid(self) % For identifying each zone
 
+  self.zone = [];
   for k = 1 : length(self.dis2center)%Find the total zonetime and identify if fly is target zone and assign zoneid to all dis2center
 
     if (self.dis2center(k) < self.tzone_inner_radius)%The radius of the inner target zone
@@ -162,6 +163,7 @@ function self = zoneid(self) % For identifying each zone
 
 
 %This part is for the decision zone
+  self.dzone = [];
   self.correctd = 0;
   self.wrongd = 0;
   for k = 1 : length(self.dis2center)
@@ -193,6 +195,7 @@ function self = zoneid(self) % For identifying each zone
 
 self.dpercentage = self.correctd / (self.correctd + self.wrongd);
 self.totald = self.correctd + self.wrongd;
+self.dperframe = length(self.totald) / self.totald
 
 %This is for calculting the time span fly spent in each zone
     reversezone = self.zone';%reverse column and rows
@@ -230,7 +233,9 @@ end
 %---------------------------------------------------------------------------------------------------
 function self = findrunstop(self)
 
-  self.stops = length(find(self.speed <= 1));
+  self.stops = [];
+  self.runs = [];
+  self.stops = length(find(self.speed < 1));
   self.runs = length(find(self.speed > 3.5));
 
 
@@ -248,8 +253,8 @@ tenth = self.wholepos(1:10:length(self.wholepos),:);
       end
         angle =  (atan2d(norm(cross(vec,vec2)),dot(vec,vec2)));
       if ~(angle == 0)
-      self.angle= [self.angle;angle];
-      self.sharpturn = numel(find(self.angle > 90));
+        self.angle= [self.angle;angle];
+        self.sharpturn = numel(find(self.angle > 90));
       end
         % self.sharpturn(:,2) = self.angle(find(self.angle > 90));
     end
@@ -260,7 +265,6 @@ end
 function savemat(self)
 
   save(fullfile(self.save_dir, self.filename),'self');
-
 
 end
 %---------------------------------------------------------------------------------------------------
@@ -275,11 +279,8 @@ end
 %---------------------------------------------------------------------------------------------------
 function displayresults(self)%This method is called when need to display plots
 
-  seconds = (length(self.wholepos)*4)/30;
-
-
+  % seconds = (length(self.wholepos)*4)/30;
   figure;
-
 
   title('Track results');
 
@@ -288,31 +289,31 @@ function displayresults(self)%This method is called when need to display plots
 
   if length(self.wholepos) < 400
 
-  plot(self.wholepos(1:end,1),self.wholepos(1:end,2),'color',[0 0 1]);
+    plot(self.wholepos(1:end,1),self.wholepos(1:end,2),'color',[0 0 1]);
 
   end
 
   if length(self.wholepos) > 400 && length(self.wholepos) < 800
 
-  plot(self.wholepos(1:400,1),self.wholepos(1:400,2),'color',[0 0 1]);
-  plot(self.wholepos(401:end,1),self.wholepos(401:end,2),'color',[0 0.5 1]);
+    plot(self.wholepos(1:400,1),self.wholepos(1:400,2),'color',[0 0 1]);
+    plot(self.wholepos(401:end,1),self.wholepos(401:end,2),'color',[0 0.5 1]);
 
   end
 
   if length(self.wholepos) > 800 && length(self.wholepos) < 1200
 
-  plot(self.wholepos(1:400,1),self.wholepos(1:400,2),'color',[0 0 1]);
-  plot(self.wholepos(401:800,1),self.wholepos(401:800,2),'color',[0 0.5 1]);
-  plot(self.wholepos(801:end,1),self.wholepos(801:end,2),'color',[0 1 1]);
+    plot(self.wholepos(1:400,1),self.wholepos(1:400,2),'color',[0 0 1]);
+    plot(self.wholepos(401:800,1),self.wholepos(401:800,2),'color',[0 0.5 1]);
+    plot(self.wholepos(801:end,1),self.wholepos(801:end,2),'color',[0 1 1]);
 
   end
 
   if length(self.wholepos) > 1200 && length(self.wholepos) < 1600
 
-  plot(self.wholepos(1:400,1),self.wholepos(1:400,2),'color',[0 0 1]);
-  plot(self.wholepos(401:800,1),self.wholepos(401:800,2),'color',[0 0.5 1]);
-  plot(self.wholepos(801:1200,1),self.wholepos(801:1200,2),'color',[0 1 1]);
-  plot(self.wholepos(1201:end,1),self.wholepos(1201:end,2),'color',[0 1 0.5]);
+    plot(self.wholepos(1:400,1),self.wholepos(1:400,2),'color',[0 0 1]);
+    plot(self.wholepos(401:800,1),self.wholepos(401:800,2),'color',[0 0.5 1]);
+    plot(self.wholepos(801:1200,1),self.wholepos(801:1200,2),'color',[0 1 1]);
+    plot(self.wholepos(1201:end,1),self.wholepos(1201:end,2),'color',[0 1 0.5]);
 
   end
 
@@ -349,7 +350,7 @@ function displayresults(self)%This method is called when need to display plots
   end
 
   if length(self.wholepos) > 2800 && length(self.wholepos) < 3200
-       plot(self.wholepos(1:400,1),self.wholepos(1:400,2),'color',[0 0 1]);
+      plot(self.wholepos(1:400,1),self.wholepos(1:400,2),'color',[0 0 1]);
       plot(self.wholepos(401:800,1),self.wholepos(401:800,2),'color',[0 0.5 1]);
       plot(self.wholepos(801:1200,1),self.wholepos(801:1200,2),'color',[0 1 1]);
       plot(self.wholepos(1201:1600,1),self.wholepos(1201:1600,2),'color',[0 1 0.5]);
