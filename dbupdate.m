@@ -1,6 +1,7 @@
+clear all;
 flydb = uigetfile;
 load(flydb);
-for k = 1 : length(flydb)
+for k = 1 : length(flydatabase)
   % flydatabase(k);
   flydatabase(k).tzone_inner_radius = 50;
   flydatabase(k) = basiccal(flydatabase(k));
@@ -10,5 +11,4 @@ for k = 1 : length(flydb)
   flydatabase(k) = findangle(flydatabase(k));
 
 end
-
 save('flydatabase.mat', 'flydatabase');

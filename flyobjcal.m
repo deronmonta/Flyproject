@@ -17,7 +17,7 @@ eleven_hr_fly = [];
 twlve_hr_fly = [];
 hr = [];
 attraction = [];
-
+normal_fly = findobj(flydatabase,'genotype','Wildtype');
 zero_hr_fly = findobj(flydatabase,'desiccation_hr',0,'genotype','Wildtype');
 one_hr_fly = findobj(flydatabase,'desiccation_hr',1,'genotype','Wildtype');
 two_hr_fly = findobj(flydatabase,'desiccation_hr',2,'genotype','Wildtype');
@@ -75,6 +75,8 @@ nanmedian([six_hr_fly.avgspeed])
 nanmedian([seven_hr_fly.avgspeed])
 nanmedian([eight_hr_fly.avgspeed])
 nanmedian([nine_hr_fly.avgspeed])
+nanmedian([ten_hr_fly.avgspeed])
+nanmedian([eleven_hr_fly.avgspeed])
 nanmedian([twlve_hr_fly.avgspeed])];
 
 sharpturns = [nanmedian([zero_hr_fly.sharpturn])
@@ -87,6 +89,8 @@ nanmedian([six_hr_fly.sharpturn])
 nanmedian([seven_hr_fly.sharpturn])
 nanmedian([eight_hr_fly.sharpturn])
 nanmedian([nine_hr_fly.sharpturn])
+nanmedian([ten_hr_fly.sharpturn])
+nanmedian([eleven_hr_fly.sharpturn])
 nanmedian([twlve_hr_fly.sharpturn])];
 
 innerspeed = [nanmedian([[zero_hr_fly.innerspeed]])
@@ -169,6 +173,79 @@ nanmedian([ten_hr_fly.stops])
 nanmedian([eleven_hr_fly.stops])
 nanmedian([twlve_hr_fly.stops])];
 
+firstenter = [nanmean([zero_hr_fly.firstenter])
+nanmean([one_hr_fly.firstenter])
+nanmean([two_hr_fly.firstenter])
+nanmean([three_hr_fly.firstenter])
+nanmean([four_hr_fly.firstenter])
+nanmean([five_hr_fly.firstenter])
+nanmean([six_hr_fly.firstenter])
+nanmean([seven_hr_fly.firstenter])
+nanmean([eight_hr_fly.firstenter])
+nanmean([nine_hr_fly.firstenter])
+nanmean([ten_hr_fly.firstenter])
+nanmean([eleven_hr_fly.firstenter])
+nanmean([twlve_hr_fly.firstenter])
+nanmean([no_water.firstenter])];
+
+dperframe = [nanmedian([zero_hr_fly.dperframe])
+nanmedian([one_hr_fly.dperframe])
+nanmedian([two_hr_fly.dperframe])
+nanmedian([three_hr_fly.dperframe])
+nanmedian([four_hr_fly.dperframe])
+nanmedian([five_hr_fly.dperframe])
+nanmedian([six_hr_fly.dperframe])
+% nanmedian([seven_hr_fly.dperframe])
+nanmedian([eight_hr_fly.dperframe])
+nanmedian([nine_hr_fly.dperframe])
+nanmedian([ten_hr_fly.dperframe])
+nanmedian([eleven_hr_fly.dperframe])
+nanmedian([twlve_hr_fly.dperframe])];
+
+runchance = [nanmedian([zero_hr_fly.runchance])
+nanmedian([one_hr_fly.runchance])
+nanmedian([two_hr_fly.runchance])
+nanmedian([three_hr_fly.runchance])
+nanmedian([four_hr_fly.runchance])
+nanmedian([five_hr_fly.runchance])
+nanmedian([six_hr_fly.runchance])
+nanmedian([seven_hr_fly.runchance])
+nanmedian([eight_hr_fly.runchance])
+nanmedian([nine_hr_fly.runchance])
+nanmedian([ten_hr_fly.runchance])
+nanmedian([eleven_hr_fly.runchance])
+nanmedian([twlve_hr_fly.runchance])];
+
+stopchance = [nanmedian([zero_hr_fly.stopchance])
+nanmedian([one_hr_fly.stopchance])
+nanmedian([two_hr_fly.stopchance])
+nanmedian([three_hr_fly.stopchance])
+nanmedian([four_hr_fly.stopchance])
+nanmedian([five_hr_fly.stopchance])
+nanmedian([six_hr_fly.stopchance])
+nanmedian([seven_hr_fly.stopchance])
+nanmedian([eight_hr_fly.stopchance])
+nanmedian([nine_hr_fly.stopchance])
+nanmedian([ten_hr_fly.stopchance])
+nanmedian([eleven_hr_fly.stopchance])
+nanmedian([twlve_hr_fly.stopchance])];
+
+enterspeed = [nanmedian([zero_hr_fly.enterspeedavg])
+nanmedian([one_hr_fly.enterspeedavg])
+nanmedian([two_hr_fly.enterspeedavg])
+nanmedian([three_hr_fly.enterspeedavg])
+nanmedian([four_hr_fly.enterspeedavg])
+nanmedian([five_hr_fly.enterspeedavg])
+nanmedian([six_hr_fly.enterspeedavg])
+nanmedian([seven_hr_fly.enterspeedavg])
+%nanmedian([eight_hr_fly.enterspeedavg])
+nanmedian([nine_hr_fly.enterspeedavg])
+nanmedian([ten_hr_fly.enterspeedavg])
+nanmedian([eleven_hr_fly.enterspeedavg])
+nanmedian([twlve_hr_fly.enterspeedavg])];
+
+
+
 % for N = 1 : length(flydatabase)
 %   if flydatabase(N).desiccation_hr == 0
 %     zero_hr_fly = [zero_hr_fly;flydatabase(N)];
@@ -219,7 +296,81 @@ nanmedian([twlve_hr_fly.stops])];
 % title('Hours vs attraction');
 
 figure;
-subplot(2,2,1);
-plot(attractionavg);
-subplot(2,2,2);
-plot(dpercentageavg);
+subplot(3,3,1);
+boxplot([normal_fly.attraction],[normal_fly.desiccation_hr]);
+title('Attraction')
+
+subplot(3,3,2)
+boxplot([normal_fly.enterspeedavg],[normal_fly.desiccation_hr]);
+title('Enterspeed');
+
+subplot(3,3,3)
+boxplot([normal_fly.innerspeed],[normal_fly.desiccation_hr]);
+title('Innerspeed');
+
+subplot(3,3,4)
+boxplot([normal_fly.dperframe],[normal_fly.desiccation_hr]);
+title('Frames per decision');
+
+
+subplot(3,3,5)
+boxplot([normal_fly.dpercentage],[normal_fly.desiccation_hr]);
+title('Decision percentage');
+
+
+figure;
+subplot(3,3,1)
+histogram(fix(vertcat(zero_hr_fly.dis2center)));
+title('0 hr ');
+subplot(3,3,2)
+histogram(fix(vertcat(one_hr_fly.dis2center)));
+title('1 hr ');
+subplot(3,3,3)
+histogram(fix(vertcat(two_hr_fly.dis2center)));
+title('2 hr ');
+subplot(3,3,4)
+histogram(fix(vertcat(three_hr_fly.dis2center)));
+title('3 hr ');
+subplot(3,3,5)
+histogram(fix(vertcat(four_hr_fly.dis2center)));
+title('4 hr ');
+subplot(3,3,6)
+histogram(fix(vertcat(five_hr_fly.dis2center)));
+title('5 hr ');
+subplot(3,3,7)
+histogram(fix(vertcat(six_hr_fly.dis2center)));
+title('6 hr ');
+subplot(3,3,8)
+histogram(fix(vertcat(seven_hr_fly.dis2center)));
+title('7 hr ');
+subplot(3,3,9)
+histogram(fix(vertcat(eight_hr_fly.dis2center)));
+title('8 hr ');
+
+figure;
+subplot(3,3,1)
+histogram(fix(vertcat(nine_hr_fly.dis2center)));
+title('9 hr ');
+subplot(3,3,2)
+histogram(fix(vertcat(ten_hr_fly.dis2center)));
+title('10 hr ');
+subplot(3,3,3)
+histogram(fix(vertcat(eleven_hr_fly.dis2center)));
+title('11 hr ');
+subplot(3,3,4)
+histogram(fix(vertcat(twlve_hr_fly.dis2center)));
+title('12 hr ');
+
+subplot(3,3,5)
+histogram(fix(vertcat(no_water.dis2center)));
+title('No water');
+
+
+
+
+
+% subplot(3,3,6)
+% [normal_fly.firstenter]
+% % normal_fly.firstenter(isnan(normal_fly.firstenter)) = [];
+% boxplot([normal_fly.firstenter],[normal_fly.desiccation_hr]);
+% title('First enter');

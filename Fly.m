@@ -45,6 +45,12 @@ properties
       angle;
       sharpturn;
       dperframe;
+      firstenter;
+      runchance;
+      stopchance;
+      enterspeed;
+      enterspeedavg;
+
 
 
 
@@ -161,6 +167,26 @@ function self = zoneid(self) % For identifying each zone
     outt = length(outindex);
     self.attraction = intime / length(self.zone);
 
+%Find the first time fly enter target zone
+if ~isempty(inindex) && ~isempty(midindex) && ~isempty(outindex)
+
+if inindex(1) > midindex(1) || inindex(1) > outindex(1)
+
+  self.firstenter = inindex(1);
+
+end
+end
+
+%Find the speed before fly enter the target zone
+
+for i = 1:length(self.zone) - 1
+
+  if self.zone(i) == 'm' && self.zone(i+1) == 'i' && i > 30%From mid to inner zone
+    self.enterspeed = [self.enterspeed;mean(self.speed(i-30 : i ))]; %Find the speed of prior 30 frames
+  end
+end
+self.enterspeedavg = mean(self.enterspeed);
+
 
 %This part is for the decision zone
   self.dzone = [];
@@ -195,7 +221,7 @@ function self = zoneid(self) % For identifying each zone
 
 self.dpercentage = self.correctd / (self.correctd + self.wrongd);
 self.totald = self.correctd + self.wrongd;
-self.dperframe = length(self.totald) / self.totald
+self.dperframe = length(self.zone) / self.totald
 
 %This is for calculting the time span fly spent in each zone
     reversezone = self.zone';%reverse column and rows
@@ -237,7 +263,8 @@ function self = findrunstop(self)
   self.runs = [];
   self.stops = length(find(self.speed < 1));
   self.runs = length(find(self.speed > 3.5));
-
+  self.stopchance = (self.stops) / length(self.speed);
+  self.runchance = (self.runs) / length(self.speed);
 
 end
 %---------------------------------------------------------------------------------------------------
@@ -275,6 +302,60 @@ function savefig(self)
 
 end
 %---------------------------------------------------------------------------------------------------
+function replay(self)
+
+  theta = linspace(0,2*pi);
+  xc = double(self.center(1,1));
+  yc = double(self.center(1,2));
+
+  figure;
+  hold on;
+  axlim = 600;  % change this to change the limit of axises
+  axis([-100 axlim -100 axlim]);
+  set(gca,'YDir','Reverse');
+  %Plot decision zone
+  plot(self.center(1,:),self.center(:,1),'or');%This plots a circle at the center of the dish
+
+
+  theta = linspace(0,2*pi);%Plot the dish on the tracking results
+
+  xc = double(self.center(1,1));
+  yc = double(self.center(1,2));
+
+
+  x = self.plate_radius*cos(theta) + xc;
+  y = self.plate_radius*sin(theta) + yc;
+
+  plot(x,y,'k','LineWidth',3);
+
+
+  x1 = self.tzone_inner_radius*cos(theta) + xc;
+  y1 = self.tzone_inner_radius*sin(theta) + yc;
+
+  plot(x1,y1,'r--');%Plot inner target zone
+
+  x2 = self.tzone_outer_radius*cos(theta) + xc;
+  y2 = self.tzone_outer_radius*sin(theta) + yc;
+
+  plot(x2,y2,'r--');%Plot outter target zone
+
+  x3 = self.dzone_inner_radius*cos(theta) + xc;
+  y3 = self.dzone_inner_radius*sin(theta) + yc;
+
+  %plot(x3,y3,'r--')
+
+  h = animatedline;
+
+  for n = 1:length(self.wholepos)
+
+  addpoints(h,self.wholepos(n,1),self.wholepos(n,2));
+  drawnow;
+  pause(0.0000001); % slow down the animation
+  end
+
+  hold off;
+  end
+
 
 %---------------------------------------------------------------------------------------------------
 function displayresults(self)%This method is called when need to display plots
