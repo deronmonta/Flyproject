@@ -33,6 +33,7 @@ eleven_hr_fly = findobj(flydatabase,'desiccation_hr',11,'genotype','Wildtype');
 twlve_hr_fly = findobj(flydatabase,'desiccation_hr',12,'genotype','Wildtype');
 rna_fly = findobj(flydatabase,'genotype','IR40aRNAi');
 no_water = findobj(flydatabase,'genotype','Wildtype, No water control');
+firstenter_fly = findobj(flydatabase,'-not','firstenter','[]');
 % one_hr_fly.zone = [one_hr_fly.zone']
 % Atrraction1 = find([one_hr_fly.zone] == 'i')/length([one_hr_fly.zone])
 
@@ -317,6 +318,12 @@ subplot(3,3,5)
 boxplot([normal_fly.dpercentage],[normal_fly.desiccation_hr]);
 title('Decision percentage');
 
+% subplot(3,3,6)
+% % normal_fly.firstenter(isnan(normal_fly.firstenter)) = [];
+% size([firstenter_fly.firstenter])
+% size([firstenter_fly.desiccation_hr])
+% bar([firstenter_fly.firstenter],[firstenter_fly.desiccation_hr]);
+% title('First enter');
 
 figure;
 subplot(3,3,1)
@@ -360,17 +367,20 @@ title('11 hr ');
 subplot(3,3,4)
 histogram(fix(vertcat(twlve_hr_fly.dis2center)));
 title('12 hr ');
-
 subplot(3,3,5)
 histogram(fix(vertcat(no_water.dis2center)));
 title('No water');
 
 
 
+figure;
+hold on;
 
+x = histogram(fix((vertcat(rna_fly.firsthundred))),'Normalization','probability');
+ x.NumBins = 100  ;
+plot(p4);
 
-% subplot(3,3,6)
-% [normal_fly.firstenter]
-% % normal_fly.firstenter(isnan(normal_fly.firstenter)) = [];
-% boxplot([normal_fly.firstenter],[normal_fly.desiccation_hr]);
-% title('First enter');
+% plot([no_water.firstthirty],'color',[0 1 0.5]);
+% plot([no_water.firstfifty],'color',[0 1 1]);
+% plot([no_water.firsthundred],'color',[1 0 0]);
+title('Radial Distribution');

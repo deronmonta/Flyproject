@@ -50,6 +50,10 @@ properties
       stopchance;
       enterspeed;
       enterspeedavg;
+      firstten;
+      firstthirty;
+      firstfifty;
+      firsthundred;
 
 
 
@@ -137,6 +141,10 @@ function self = correction(self)
   self.speed(speederror,:) = [];
   self.wholepos(speederror,:) = [];
   self.dis2center(speederror) = [];
+  self.firstten = abs(self.dis2center(20) - self.dis2center(1));
+  self.firstthirty = abs(self.dis2center(60) - self.dis2center(1));
+  self.firstfifty = abs(self.dis2center(100) - self.dis2center(1));
+  self.firsthundred = abs(self.dis2center(200)- self.dis2center(1));
 
 end
 %---------------------------------------------------------------------------------------------------
