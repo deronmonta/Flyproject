@@ -55,6 +55,9 @@ for N = 1:length(wholepossubs) %Loop through every sub folder    || ~(wholepossu
     elseif strcmp(wholepossubs(N).name,'IR40aRNAi')
       hours = 8;
       geno = 'IR40aRNAi';
+    elseif strcmp(wholepossubs(N).name,'Screen')
+      hours = 8;
+      geno = 'Unknown';
     end
 
     for k = 1:length(files) %Loop through files in sub folder

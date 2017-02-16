@@ -104,9 +104,8 @@ wholepos = zeros(totalframenum,2);%Declare a array for hodling the positions
 
     updateAssignedTracks();
     updateUnassignedTracks();
-%     deleteLostTracks();
-%
-      displayTrackingResults();
+%   deleteLostTracks();
+    displayTrackingResults();
 
 
  end
@@ -243,7 +242,7 @@ end
 
         frame = readFrame(obj.reader);
         % frame = medfilt2(frame);
-        frame = imgaussfilt(frame,2);
+
         %frame = imcrop(frame,[ 0 400 400]);
         %frame = imadjust(frame,[0.3 0.9],[]);
 
@@ -266,6 +265,7 @@ end
 
         % Detect foreground.
         mask = obj.detector.step(frame);
+        mask = imgaussfilt(mask,2);
         mask = imopen(mask, strel('square', 5));
         mask = imclose(mask, strel('rectangle', [15,15]));
         mask = imfill(mask, 'holes');
@@ -482,7 +482,7 @@ end
         frame = im2uint8(frame);
         mask = uint8(repmat(mask, [1, 1, 3])) .* 255;
         mask = insertShape(mask,'circle',[260 260 250],'LineWidth', 5); % Set the center of the dish. Default was 1024 1024 450
-          frame = insertShape(frame, 'circle', [260 260 1], 'LineWidth', 5); % Set the center of the dish. Default was 1024 1024 1
+        frame = insertShape(frame, 'circle', [260 260 1], 'LineWidth', 5); % Set the center of the dish. Default was 1024 1024 1
 
 
 
