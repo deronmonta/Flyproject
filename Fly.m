@@ -54,6 +54,7 @@ properties
       firstthirty;
       firstfifty;
       firsthundred;
+      errors;
 
 
 
@@ -141,10 +142,12 @@ function self = correction(self)
   self.speed(speederror,:) = [];
   self.wholepos(speederror,:) = [];
   self.dis2center(speederror) = [];
-  self.firstten = abs(self.dis2center(20) - self.dis2center(1));
-  self.firstthirty = abs(self.dis2center(60) - self.dis2center(1));
-  self.firstfifty = abs(self.dis2center(100) - self.dis2center(1));
-  self.firsthundred = abs(self.dis2center(200)- self.dis2center(1));
+  self.errors = length(speederror) + length(diserror);
+
+  self.firstten= abs(sqrt(sum((self.wholepos(10,:) - self.wholepos(1,:)).^2)));
+  self.firstthirty = abs(sqrt(sum((self.wholepos(30,:) - self.wholepos(1,:)).^2)));
+  self.firstfifty = abs(sqrt(sum((self.wholepos(50,:) - self.wholepos(1,:)).^2)));
+  self.firsthundred = abs(sqrt(sum((self.wholepos(100,:) - self.wholepos(1,:)).^2)));
 
 end
 %---------------------------------------------------------------------------------------------------

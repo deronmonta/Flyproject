@@ -187,7 +187,7 @@ nanmean([nine_hr_fly.firstenter])
 nanmean([ten_hr_fly.firstenter])
 nanmean([eleven_hr_fly.firstenter])
 nanmean([twlve_hr_fly.firstenter])
-nanmean([no_water.firstenter])];
+ nanmean([no_water.firstenter])];
 
 dperframe = [nanmedian([zero_hr_fly.dperframe])
 nanmedian([one_hr_fly.dperframe])
@@ -376,10 +376,13 @@ title('No water');
 figure;
 hold on;
 
-x = histogram(fix((vertcat(rna_fly.firsthundred))),'Normalization','probability');
- x.NumBins = 100  ;
+x = histogram((vertcat(no_water.firsthundred)),'Normalization','probability');%Plot histogram according to Distribution probability
+x.NumBins = 100;
+p4 = [];
+for n = 0:0.1:100
+  p4 = [p4;randomwalk(n,100)];
+end
 plot(p4);
-
 % plot([no_water.firstthirty],'color',[0 1 0.5]);
 % plot([no_water.firstfifty],'color',[0 1 1]);
 % plot([no_water.firsthundred],'color',[1 0 0]);
