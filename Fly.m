@@ -55,6 +55,7 @@ properties
       firstfifty;
       firsthundred;
       errors;
+      curvature;
 
 
 
@@ -181,11 +182,11 @@ function self = zoneid(self) % For identifying each zone
 %Find the first time fly enter target zone
 if ~isempty(inindex) && ~isempty(midindex) && ~isempty(outindex)
 
-if inindex(1) > midindex(1) || inindex(1) > outindex(1)
+  if inindex(1) > midindex(1) || inindex(1) > outindex(1)
 
-  self.firstenter = inindex(1);
+    self.firstenter = inindex(1);
 
-end
+  end
 end
 
 %Find the speed before fly enter the target zone
@@ -207,6 +208,7 @@ self.enterspeedavg = mean(self.enterspeed);
 
       if (self.dis2center(k) > self.dzone_outer_radius)%The radius of the inner decision zone
           self.dzone = [self.dzone;'o'];
+
       end
 
       if (self.dis2center(k) > self.dzone_inner_radius && self.dis2center(k) < self.dzone_outer_radius)% Find the frame at whcih the fly is at mid zone
@@ -234,39 +236,41 @@ self.dpercentage = self.correctd / (self.correctd + self.wrongd);
 self.totald = self.correctd + self.wrongd;
 self.dperframe = length(self.zone) / self.totald
 
-%This is for calculting the time span fly spent in each zone
-    reversezone = self.zone';%reverse column and rows
 
-    timestamps = find(diff([-1 reversezone -1]) ~= 0);%Where the self.zone change
-
-    inzone = (reversezone == 'i');
-    timestamps = find(diff([-1 inzone -1]) ~= 0);%Where the inzone change
-    runlength = diff(timestamps);
-    self.eachtimeini = runlength(1+(inzone(1) == 0 ):2:end);
-    self.eachtimeini = self.eachtimeini';
-
-    timestamps = find(diff([-1 reversezone -1]) ~= 0);%Where the self.zone change
-    midzone = (reversezone =='m');
-    timestamps = find(diff([-1 midzone -1]) ~= 0);%Where the midzone change
-    runlength = diff(timestamps);
-    self.eachtimeinm = runlength(1+(midzone(1) == 0):2:end);
-    self.eachtimeinm = self.eachtimeinm';
-
-    timestamps = find(diff([-1 reversezone -1]) ~= 0);%Where the self.zone change
-    outzone = (reversezone =='o');
-    timestamps = [find(diff([-1 outzone -1]) ~= 0)];%Where the outzone change
-    runlength = diff(timestamps);
-    self.eachtimeino = runlength(1 +(outzone(1) == 0):2:end);
-    self.eachtimeino = self.eachtimeino';
-
-    self.zone(end) = [];
-    self.innerspeed = mean(self.speed(find(self.zone == 'i')));%This calculates the mean speed of the inner zone
-    self.outerspeed = mean(self.speed(find(self.zone == 'o')));%This calculates the mean speed of the outer zone
-    self.midspeed = mean(self.speed(find(self.zone == 'm')));%This calculates the mean speed of the mid zone
 
 end
 %---------------------------------------------------------------------------------------------------
+function self = zonecal(self)
+  %This is for calculting the time span fly spent in each zone
+      reversezone = self.zone';%reverse column and rows
 
+      timestamps = find(diff([-1 reversezone -1]) ~= 0);%Where the self.zone change
+
+      inzone = (reversezone == 'i');
+      timestamps = find(diff([-1 inzone -1]) ~= 0);%Where the inzone change
+      runlength = diff(timestamps);
+      self.eachtimeini = runlength(1+(inzone(1) == 0 ):2:end);
+      self.eachtimeini = self.eachtimeini';
+
+      timestamps = find(diff([-1 reversezone -1]) ~= 0);%Where the self.zone change
+      midzone = (reversezone =='m');
+      timestamps = find(diff([-1 midzone -1]) ~= 0);%Where the midzone change
+      runlength = diff(timestamps);
+      self.eachtimeinm = runlength(1+(midzone(1) == 0):2:end);
+      self.eachtimeinm = self.eachtimeinm';
+
+      timestamps = find(diff([-1 reversezone -1]) ~= 0);%Where the self.zone change
+      outzone = (reversezone =='o');
+      timestamps = [find(diff([-1 outzone -1]) ~= 0)];%Where the outzone change
+      runlength = diff(timestamps);
+      self.eachtimeino = runlength(1 +(outzone(1) == 0):2:end);
+      self.eachtimeino = self.eachtimeino';
+
+      self.zone(end-1:end) = [];
+      self.innerspeed = mean(self.speed(find(self.zone == 'i')));%This calculates the mean speed of the inner zone
+      self.outerspeed = mean(self.speed(find(self.zone == 'o')));%This calculates the mean speed of the outer zone
+      self.midspeed = mean(self.speed(find(self.zone == 'm')));%This calculates the mean speed of the mid zone
+end
 %---------------------------------------------------------------------------------------------------
 function self = findrunstop(self)
 
@@ -281,21 +285,38 @@ end
 %---------------------------------------------------------------------------------------------------
 
 function self = findangle(self)
-
-tenth = self.wholepos(1:10:length(self.wholepos),:);
-
-    for i = 2:length(tenth)
-      if i < length(tenth)
-        vec2 = [tenth(i,:)-tenth(i-1,:),0];
-        vec = [tenth(i+1,:)-tenth(i,:),0];
-      end
-        angle =  (atan2d(norm(cross(vec,vec2)),dot(vec,vec2)));
-      if ~(angle == 0)
-        self.angle= [self.angle;angle];
-        self.sharpturn = numel(find(self.angle > 90));
-      end
-        % self.sharpturn(:,2) = self.angle(find(self.angle > 90));
+vec = [];
+% tenth = self.wholepos(1:10:length(self.wholepos),:);
+%
+%     for i = 2:length(tenth)
+%       if i < length(tenth)
+%         vec2 = [tenth(i,:)-tenth(i-1,:),0];
+%         vec = [tenth(i+1,:)-tenth(i,:),0];
+%       end
+%         angle =  (atan2d(norm(cross(vec,vec2)),dot(vec,vec2)));
+%       if ~(angle == 0)
+%         self.angle= [self.angle;angle];
+%         self.sharpturn = numel(find(self.angle > 90));
+%       end
+%         % self.sharpturn(:,2) = self.angle(find(self.angle > 90));
+%     end
+  for i = 1 : length(self.wholepos)-1
+    vec(i,:) = self.wholepos(i+1,:) - self.wholepos(i,:); % The tagent of the curve
+    if vec(i,1) == 0 || vec(i,2) == 0
+      vec(i,:) = [0 0];
+    else
+      magnitude = ((vec(i,1)^2) + (vec(i,2)^2));
+     vec(i,1) = vec(i,1)/magnitude; %Trasform to unit step, x direction
+     vec(i,2) = vec(i,2)/magnitude; %Trasform to unit step, x direction
     end
+  end
+self.curvature = [];
+  for i = 1 : length(vec)-1
+    self.curvature(i) = ((vec(i+1,1) - vec(i,1))^2) + ((vec(i+1,2) - vec(i,2))^2);
+  end
+      self.curvature = self.curvature';
+self.sharpturn = find (self.curvature > 1);
+
 
 end
 
@@ -360,6 +381,8 @@ function replay(self)
   for n = 1:length(self.wholepos)
 
   addpoints(h,self.wholepos(n,1),self.wholepos(n,2));
+  dim = [0.2 0.5 0.3 0.3];
+  disp(n);
   drawnow;
   pause(0.0000001); % slow down the animation
   end
@@ -493,6 +516,10 @@ function displayresults(self)%This method is called when need to display plots
   plot(x2,y2,'r--');%Plot outter target zone
 
 
+  for i = 1:length(self.sharpturn)
+
+    plot(self.wholepos(self.sharpturn(i),1),self.wholepos(self.sharpturn(i),2),'ok'),
+  end
 end
 %---------------------------------------------------------------------------------------------------
 
