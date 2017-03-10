@@ -56,6 +56,7 @@ properties
       firsthundred;
       errors;
       curvature;
+      sharpturnpos;
 
 
 
@@ -99,14 +100,8 @@ function self = basiccal(self)% This function is called every time
 
     %Assign speed
     self.speed = zeros(self.totalframe - 1, 1);
-
-    for i = 2:length(self.wholepos)
-
-        self.speed = [self.speed;sqrt(sum((self.wholepos(i,:)-self.wholepos((i-1),:)).^2))];
-
-    end
-
-self.avgspeed = mean(self.speed);
+    self.speed = sqrt(diff(self.wholepos.^2));
+    self.avgspeed = mean(self.speed);
 
 end
 %---------------------------------------------------------------------------------------------------
@@ -286,7 +281,8 @@ end
 
 function self = findangle(self)
 vec = [];
-% tenth = self.wholepos(1:10:length(self.wholepos),:);
+fifth = [];
+fifth = self.wholepos(1:2:length(self.wholepos),:);
 %
 %     for i = 2:length(tenth)
 %       if i < length(tenth)
@@ -300,22 +296,20 @@ vec = [];
 %       end
 %         % self.sharpturn(:,2) = self.angle(find(self.angle > 90));
 %     end
-  for i = 1 : length(self.wholepos)-1
-    vec(i,:) = self.wholepos(i+1,:) - self.wholepos(i,:); % The tagent of the curve
-    if vec(i,1) == 0 || vec(i,2) == 0
-      vec(i,:) = [0 0];
-    else
-      magnitude = ((vec(i,1)^2) + (vec(i,2)^2));
-     vec(i,1) = vec(i,1)/magnitude; %Trasform to unit step, x direction
-     vec(i,2) = vec(i,2)/magnitude; %Trasform to unit step, x direction
-    end
-  end
-self.curvature = [];
-  for i = 1 : length(vec)-1
-    self.curvature(i) = ((vec(i+1,1) - vec(i,1))^2) + ((vec(i+1,2) - vec(i,2))^2);
-  end
-      self.curvature = self.curvature';
-self.sharpturn = find (self.curvature > 1);
+  vec = diff(fifth);
+  % vec(i,:) = fifth(i+1,:) - fifth(i,:); % The tagent of the curve
+
+      magnitude = sqrt(vec(:,1).^2 + vec(:,2).^2);
+     vec(:,1) = vec(:,1)./magnitude; %Trasform to unit step, x direction
+     vec(:,2) = vec(:,2)./magnitude; %Trasform to unit step, x direction
+     self.curvature = [];
+     self.curvature = diff(vec);
+     self.curvature = self.curvature(:,1).^2 + self.curvature(:,2).^2;
+
+      % self.curvature = self.curvature';
+sharp_threshold = 1.5;
+self.sharpturnpos = find(self.curvature > sharp_threshold);
+self.sharpturn = length(find (self.curvature > sharp_threshold));
 
 
 end
@@ -516,9 +510,8 @@ function displayresults(self)%This method is called when need to display plots
   plot(x2,y2,'r--');%Plot outter target zone
 
 
-  for i = 1:length(self.sharpturn)
-
-    plot(self.wholepos(self.sharpturn(i),1),self.wholepos(self.sharpturn(i),2),'ok'),
+  for i = 1:length(self.sharpturnpos)
+    plot(self.wholepos(self.sharpturnpos(i),1),self.wholepos(self.sharpturnpos(i),2),'ok'),
   end
 end
 %---------------------------------------------------------------------------------------------------
