@@ -57,8 +57,12 @@ properties
       errors;
       curvature;
       sharpturnpos;
-
-
+      water;
+      vec;
+      size10steps;
+      size10stepslength;
+      size50steps;
+      size50stepslength;
 
 
   end
@@ -144,6 +148,13 @@ function self = correction(self)
   self.firstthirty = abs(sqrt(sum((self.wholepos(30,:) - self.wholepos(1,:)).^2)));
   self.firstfifty = abs(sqrt(sum((self.wholepos(50,:) - self.wholepos(1,:)).^2)));
   self.firsthundred = abs(sqrt(sum((self.wholepos(100,:) - self.wholepos(1,:)).^2)));
+  self.vec = diff(self.wholepos);
+  tenth = self.wholepos(1:10:end,:);
+  fiftyth = self.wholepos(1:50:end,:);
+  self.size10steps = diff(tenth);
+  self.size50steps = diff(fiftyth);
+  self.size10stepslength = sqrt((self.size10steps(:,1).^2) + (self.size10steps(:,2).^2));
+  self.size50stepslength = sqrt((self.size50steps(:,1).^2) + (self.size50steps(:,2).^2));
 
 end
 %---------------------------------------------------------------------------------------------------
