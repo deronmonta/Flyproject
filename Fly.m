@@ -60,9 +60,15 @@ properties
       water;
       vec;
       size10steps;
+      size10angle;
       size10stepslength;
+      size20steps;
+      size20stepslength;
+      size20angle;
       size50steps;
       size50stepslength;
+      size50angle;
+
 
 
   end
@@ -150,10 +156,13 @@ function self = correction(self)
   self.firsthundred = abs(sqrt(sum((self.wholepos(100,:) - self.wholepos(1,:)).^2)));
   self.vec = diff(self.wholepos);
   tenth = self.wholepos(1:10:end,:);
+  twentyth = self.wholepos(1:20:end,:);
   fiftyth = self.wholepos(1:50:end,:);
   self.size10steps = diff(tenth);
+  self.size20steps = diff(twentyth);
   self.size50steps = diff(fiftyth);
   self.size10stepslength = sqrt((self.size10steps(:,1).^2) + (self.size10steps(:,2).^2));
+  self.size20stepslength = sqrt((self.size20steps(:,1).^2) + (self.size20steps(:,2).^2));
   self.size50stepslength = sqrt((self.size50steps(:,1).^2) + (self.size50steps(:,2).^2));
 
 end
@@ -293,7 +302,34 @@ end
 function self = findangle(self)
 vec = [];
 fifth = [];
-fifth = self.wholepos(1:2:length(self.wholepos),:);
+magnitude = [];
+fifth = self.wholepos(1:5:end,:);
+
+for i = 2 : length(self.size10steps)
+
+  if self.size10steps(i,1) ~= 0 && self.size10steps(i,2) ~= 0
+    self.size10angle = [self.size10angle; atan2d(self.size10steps(i-1,1)*self.size10steps(i,2) - self.size10steps(i-1,2)*self.size10steps(i,1), self.size10steps(i,1)*self.size10steps(i-1,1) + self.size10steps(i,2)*self.size10steps(i-1,2))];
+    %Find angle between two consecutive steps
+  end
+end
+
+for i = 2 : length(self.size20steps)
+
+  if self.size20steps(i,1) ~= 0 && self.size20steps(i,2) ~= 0
+    self.size20angle = [self.size20angle; atan2d(self.size20steps(i-1,1)*self.size20steps(i,2) - self.size20steps(i-1,2)*self.size20steps(i,1), self.size20steps(i,1)*self.size20steps(i-1,1) + self.size20steps(i,2)*self.size20steps(i-1,2))];
+  %Find angle between two consecutive steps
+  end
+
+end
+
+for i = 2 : length(self.size50steps)
+
+  if self.size50steps(i,1) ~= 0 && self.size50steps(i,2) ~= 0
+    self.size50angle = [self.size50angle; atan2d(self.size50steps(i-1,1)*self.size50steps(i,2) - self.size50steps(i-1,2)*self.size50steps(i,1), self.size50steps(i,1)*self.size50steps(i-1,1) + self.size50steps(i,2)*self.size50steps(i-1,2))];
+  %Find angle between two consecutive steps
+  end
+
+end
 %
 %     for i = 2:length(tenth)
 %       if i < length(tenth)
@@ -310,7 +346,7 @@ fifth = self.wholepos(1:2:length(self.wholepos),:);
   vec = diff(fifth);
   % vec(i,:) = fifth(i+1,:) - fifth(i,:); % The tagent of the curve
 
-      magnitude = sqrt(vec(:,1).^2 + vec(:,2).^2);
+     magnitude = sqrt(vec(:,1).^2 + vec(:,2).^2);
      vec(:,1) = vec(:,1)./magnitude; %Trasform to unit step, x direction
      vec(:,2) = vec(:,2)./magnitude; %Trasform to unit step, x direction
      self.curvature = [];
