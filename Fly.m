@@ -7,7 +7,7 @@ classdef Fly < handle
 properties
     %Static variables
       plate_radius = 260;
-      tzone_inner_radius = 50;%tzone stands for target zone
+      tzone_inner_radius = 100;%tzone stands for target zone
       tzone_outer_radius = 240;
       center = [250 250];
       dzone_inner_radius = 50;%dzone stands for decision zone
@@ -59,6 +59,9 @@ properties
       sharpturnpos;
       water;
       vec;
+      size5steps;
+      size5angle;
+      size5stepslength;
       size10steps;
       size10angle;
       size10stepslength;
@@ -155,12 +158,13 @@ function self = correction(self)
   self.firstfifty = abs(sqrt(sum((self.wholepos(50,:) - self.wholepos(1,:)).^2)));
   self.firsthundred = abs(sqrt(sum((self.wholepos(100,:) - self.wholepos(1,:)).^2)));
   self.vec = diff(self.wholepos);
-  tenth = self.wholepos(1:10:end,:);
-  twentyth = self.wholepos(1:20:end,:);
-  fiftyth = self.wholepos(1:50:end,:);
-  self.size10steps = diff(tenth);
-  self.size20steps = diff(twentyth);
-  self.size50steps = diff(fiftyth);
+
+  %The following calculates steps and steps length for different time span
+  self.size5steps = diff(self.wholepos(1:5:end,:));
+  self.size10steps = diff(self.wholepos(1:10:end,:));
+  self.size20steps = diff(self.wholepos(1:20:end,:));
+  self.size50steps = diff(self.wholepos(1:50:end,:));
+  self.size5stepslength = sqrt((self.size5steps(:,1).^2) + (self.size5steps(:,2).^2));
   self.size10stepslength = sqrt((self.size10steps(:,1).^2) + (self.size10steps(:,2).^2));
   self.size20stepslength = sqrt((self.size20steps(:,1).^2) + (self.size20steps(:,2).^2));
   self.size50stepslength = sqrt((self.size50steps(:,1).^2) + (self.size50steps(:,2).^2));
@@ -285,6 +289,11 @@ function self = zonecal(self)
       self.innerspeed = mean(self.speed(find(self.zone == 'i')));%This calculates the mean speed of the inner zone
       self.outerspeed = mean(self.speed(find(self.zone == 'o')));%This calculates the mean speed of the outer zone
       self.midspeed = mean(self.speed(find(self.zone == 'm')));%This calculates the mean speed of the mid zone
+
+
+      %Get step parameter within each zone
+      inpos = self.wholepos(find(self.zone == 'i'),:);
+      
 end
 %---------------------------------------------------------------------------------------------------
 function self = findrunstop(self)
@@ -303,7 +312,17 @@ function self = findangle(self)
 vec = [];
 fifth = [];
 magnitude = [];
+
 fifth = self.wholepos(1:5:end,:);
+
+for i = 2 : length(self.size5steps)
+
+  if self.size5steps(i,1) ~= 0 && self.size5steps(i,2) ~= 0
+    self.size5angle = [self.size5angle; atan2d(self.size5steps(i-1,1)*self.size5steps(i,2) - self.size5steps(i-1,2)*self.size5steps(i,1), self.size5steps(i,1)*self.size5steps(i-1,1) + self.size5steps(i,2)*self.size5steps(i-1,2))];
+    %Find angle between two consecutive steps
+  end
+end
+
 
 for i = 2 : length(self.size10steps)
 
@@ -330,6 +349,15 @@ for i = 2 : length(self.size50steps)
   end
 
 end
+
+inindex = find(self.zone == 'i');
+inindex = fix(inindex./10);
+innerangle = self.size10angle(inindex);
+
+outindex = find(self.zone == 'o');
+outindex = fix(outindex./10);
+outangle = self.size10angle(outindex);
+
 %
 %     for i = 2:length(tenth)
 %       if i < length(tenth)
@@ -558,7 +586,11 @@ function displayresults(self)%This method is called when need to display plots
 
 
   for i = 1:length(self.sharpturnpos)
-    plot(self.wholepos(self.sharpturnpos(i),1),self.wholepos(self.sharpturnpos(i),2),'ok'),
+    plot(self.wholepos(self.sharpturnpos(i),1),self.wholepos(self.sharpturnpos(i),2),'ok') % This plots all the sharp angle on the tracks
+  end
+
+  for i = 1:5:length(self.wholepos) %Size 5 steps
+    plot(self.wholepos(i,1),self.wholepos(i,2),'ob')
   end
 end
 %---------------------------------------------------------------------------------------------------

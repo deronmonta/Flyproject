@@ -14,7 +14,7 @@ eight_hr_fly = [];
 nine_hr_fly = [];
 ten_hr_fly = [];
 eleven_hr_fly = [];
-twlve_hr_fly = [];
+twelve_hr_fly = [];
 hr = [];
 attraction = [];
 normal_fly = findobj(flydatabase,'genotype','Wildtype');
@@ -30,12 +30,21 @@ eight_hr_fly = findobj(flydatabase,'desiccation_hr',8,'genotype','Wildtype');
 nine_hr_fly = findobj(flydatabase,'desiccation_hr',9,'genotype','Wildtype');
 ten_hr_fly = findobj(flydatabase,'desiccation_hr',10,'genotype','Wildtype');
 eleven_hr_fly = findobj(flydatabase,'desiccation_hr',11,'genotype','Wildtype');
-twlve_hr_fly = findobj(flydatabase,'desiccation_hr',12,'genotype','Wildtype');
+twelve_hr_fly = findobj(flydatabase,'desiccation_hr',12,'genotype','Wildtype');
 rna_fly = findobj(flydatabase,'genotype','IR40aRNAi');
 no_water = findobj(flydatabase,'genotype','Wildtype, No water control');
 firstenter_fly = findobj(flydatabase,'-not','firstenter','[]');
 % one_hr_fly.zone = [one_hr_fly.zone']
 % Atrraction1 = find([one_hr_fly.zone] == 'i')/length([one_hr_fly.zone])
+zerolength = vertcat(zero_hr_fly.size5stepslength);
+twelvelength = vertcat(twelve_hr_fly.size5stepslength);
+histogram(zerolength,'Normalization','probability');
+histogram(twelvelength,'Normalization','probability');
+zeroangle = vertcat(zero_hr_fly.size20angle);
+twelveangle = vertcat(twelve_hr_fly.size20angle);
+histogram(zeroangle,'Normalization','probability');
+figure;
+histogram(twelveangle,'Normalization','probability');
 
 
 attractionavg = [nanmedian([zero_hr_fly.attraction])
@@ -50,7 +59,7 @@ nanmedian([eight_hr_fly.attraction])
 nanmedian([nine_hr_fly.attraction])
 nanmedian([ten_hr_fly.attraction])
 nanmedian([eleven_hr_fly.attraction])
-nanmedian([twlve_hr_fly.attraction])];
+nanmedian([twelve_hr_fly.attraction])];
 
 dpercentageavg = [nanmedian([zero_hr_fly.dpercentage])
 nanmedian([one_hr_fly.dpercentage])
@@ -64,7 +73,7 @@ nanmedian([eight_hr_fly.dpercentage])
 nanmedian([nine_hr_fly.dpercentage])
 nanmedian([ten_hr_fly.dpercentage])
 nanmedian([eleven_hr_fly.dpercentage])
-nanmedian([twlve_hr_fly.dpercentage])];
+nanmedian([twelve_hr_fly.dpercentage])];
 
 speedavg = [nanmedian([zero_hr_fly.avgspeed])
 nanmedian([one_hr_fly.avgspeed])
@@ -78,7 +87,7 @@ nanmedian([eight_hr_fly.avgspeed])
 nanmedian([nine_hr_fly.avgspeed])
 nanmedian([ten_hr_fly.avgspeed])
 nanmedian([eleven_hr_fly.avgspeed])
-nanmedian([twlve_hr_fly.avgspeed])];
+nanmedian([twelve_hr_fly.avgspeed])];
 
 sharpturns = [nanmedian([zero_hr_fly.sharpturn])
 nanmedian([one_hr_fly.sharpturn])
@@ -92,7 +101,7 @@ nanmedian([seven_hr_fly.sharpturn])
 nanmedian([nine_hr_fly.sharpturn])
 nanmedian([ten_hr_fly.sharpturn])
 nanmedian([eleven_hr_fly.sharpturn])
-nanmedian([twlve_hr_fly.sharpturn])];
+nanmedian([twelve_hr_fly.sharpturn])];
 
 innerspeed = [nanmedian([[zero_hr_fly.innerspeed]])
 nanmedian([one_hr_fly.innerspeed])
@@ -106,7 +115,7 @@ nanmedian([eight_hr_fly.innerspeed])
 nanmedian([nine_hr_fly.innerspeed])
 nanmedian([ten_hr_fly.innerspeed])
 nanmedian([eleven_hr_fly.innerspeed])
-nanmedian([twlve_hr_fly.innerspeed])];
+nanmedian([twelve_hr_fly.innerspeed])];
 
 midspeed = [nanmedian([[zero_hr_fly.midspeed]])
 nanmedian([one_hr_fly.midspeed])
@@ -118,7 +127,7 @@ nanmedian([six_hr_fly.midspeed])
 nanmedian([seven_hr_fly.midspeed])
 nanmedian([eight_hr_fly.midspeed])
 nanmedian([nine_hr_fly.midspeed])
-nanmedian([twlve_hr_fly.midspeed])];
+nanmedian([twelve_hr_fly.midspeed])];
 
 totaldecisions = [nanmedian([[zero_hr_fly.totald]])
 nanmedian([one_hr_fly.totald])
@@ -132,7 +141,7 @@ nanmedian([eight_hr_fly.totald])
 nanmedian([nine_hr_fly.totald])
 nanmedian([ten_hr_fly.totald])
 nanmedian([eleven_hr_fly.totald])
-nanmedian([twlve_hr_fly.totald])];
+nanmedian([twelve_hr_fly.totald])];
 
 correctd = [nanmedian([[zero_hr_fly.correctd]])
 nanmedian([one_hr_fly.correctd])
@@ -144,7 +153,7 @@ nanmedian([six_hr_fly.correctd])
 nanmedian([seven_hr_fly.correctd])
 nanmedian([eight_hr_fly.correctd])
 nanmedian([nine_hr_fly.correctd])
-nanmedian([twlve_hr_fly.correctd])];
+nanmedian([twelve_hr_fly.correctd])];
 
 runsavg = [nanmedian([zero_hr_fly.runs])
 nanmedian([one_hr_fly.runs])
@@ -158,7 +167,7 @@ nanmedian([eight_hr_fly.runs])
 nanmedian([nine_hr_fly.runs])
 nanmedian([ten_hr_fly.runs])
 nanmedian([eleven_hr_fly.runs])
-nanmedian([twlve_hr_fly.runs])];
+nanmedian([twelve_hr_fly.runs])];
 
 stopsavg = [nanmedian([zero_hr_fly.stops])
 nanmedian([one_hr_fly.stops])
@@ -172,7 +181,7 @@ nanmedian([eight_hr_fly.stops])
 nanmedian([nine_hr_fly.stops])
 nanmedian([ten_hr_fly.stops])
 nanmedian([eleven_hr_fly.stops])
-nanmedian([twlve_hr_fly.stops])];
+nanmedian([twelve_hr_fly.stops])];
 
 firstenter = [nanmean([zero_hr_fly.firstenter])
 nanmean([one_hr_fly.firstenter])
@@ -186,7 +195,7 @@ nanmean([eight_hr_fly.firstenter])
 nanmean([nine_hr_fly.firstenter])
 nanmean([ten_hr_fly.firstenter])
 nanmean([eleven_hr_fly.firstenter])
-nanmean([twlve_hr_fly.firstenter])
+nanmean([twelve_hr_fly.firstenter])
  nanmean([no_water.firstenter])];
 
 dperframe = [nanmedian([zero_hr_fly.dperframe])
@@ -201,7 +210,7 @@ nanmedian([eight_hr_fly.dperframe])
 nanmedian([nine_hr_fly.dperframe])
 nanmedian([ten_hr_fly.dperframe])
 nanmedian([eleven_hr_fly.dperframe])
-nanmedian([twlve_hr_fly.dperframe])];
+nanmedian([twelve_hr_fly.dperframe])];
 
 runchance = [nanmedian([zero_hr_fly.runchance])
 nanmedian([one_hr_fly.runchance])
@@ -215,7 +224,7 @@ nanmedian([eight_hr_fly.runchance])
 nanmedian([nine_hr_fly.runchance])
 nanmedian([ten_hr_fly.runchance])
 nanmedian([eleven_hr_fly.runchance])
-nanmedian([twlve_hr_fly.runchance])];
+nanmedian([twelve_hr_fly.runchance])];
 
 stopchance = [nanmedian([zero_hr_fly.stopchance])
 nanmedian([one_hr_fly.stopchance])
@@ -229,7 +238,7 @@ nanmedian([eight_hr_fly.stopchance])
 nanmedian([nine_hr_fly.stopchance])
 nanmedian([ten_hr_fly.stopchance])
 nanmedian([eleven_hr_fly.stopchance])
-nanmedian([twlve_hr_fly.stopchance])];
+nanmedian([twelve_hr_fly.stopchance])];
 
 enterspeed = [nanmedian([zero_hr_fly.enterspeedavg])
 nanmedian([one_hr_fly.enterspeedavg])
@@ -243,7 +252,7 @@ nanmedian([seven_hr_fly.enterspeedavg])
 nanmedian([nine_hr_fly.enterspeedavg])
 nanmedian([ten_hr_fly.enterspeedavg])
 nanmedian([eleven_hr_fly.enterspeedavg])
-nanmedian([twlve_hr_fly.enterspeedavg])];
+nanmedian([twelve_hr_fly.enterspeedavg])];
 
 
 
@@ -279,7 +288,7 @@ nanmedian([twlve_hr_fly.enterspeedavg])];
 %     nine_hr_fly = [nine_hr_fly;flydatabase(N)];
 %   end
 %   if flydatabase(N).desiccation_hr == 12
-%     twlve_hr_fly = [twlve_hr_fly;flydatabase(N)];
+%     twelve_hr_fly = [twelve_hr_fly;flydatabase(N)];
 %   end %Group in to different desiccation hours Group by different hours
 % end
 
@@ -365,7 +374,7 @@ subplot(3,3,3)
 histogram(fix(vertcat(eleven_hr_fly.dis2center)));
 title('11 hr ');
 subplot(3,3,4)
-histogram(fix(vertcat(twlve_hr_fly.dis2center)));
+histogram(fix(vertcat(twelve_hr_fly.dis2center)));
 title('12 hr ');
 subplot(3,3,5)
 histogram(fix(vertcat(no_water.dis2center)));
