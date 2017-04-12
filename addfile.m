@@ -1,22 +1,28 @@
+clear all
 disp('Choose Fly position files source');
 wholepossrc = uigetdir;
-disp('Choose flydatabase directory'):
+disp('Choose flydatabase directory');
 savedir = uigetdir;
-wholepossubs = dir(wholepossrc);
-fly = [];
-flies = [];
-files = dir(fullfile(wholepossubs(N).name,'*.mat'));
-
-for k = 1:length(wholepossrc)
-  fly(k) = Fly();
-  geno = 'Wildtype';
-  hours = fly(k) = fly(k).assignment(files(k).name, k, date, hours, geno ,wholepos,wholepossrc,savedir);
-  fly(k) = basiccal(fly(k));
-  fly(k) = correction(fly(k));
-  fly(k) = zoneid(fly(k));
-  fly(k) = findrunstop(fly(k));
-  fly(k) = findangle(fly(k));
-  flies = [flies;fly(k)];
+% fly = Fly();%Single Fly obj
+flies = [];%Flies array
+files = dir(fullfile(wholepossrc,'*.mat'));
+files
+hours = input('Enter desiccation hour: ');
+geno = input('Enter Geno type: ','s');
+water = input('Water source? (Y/N)','s');
+files.name
+for k = 1:length(files)
+  cd(wholepossrc)
+  load(files(k).name)
+  fly = Fly();%Initalize fly obj
+  fly = fly.assignment(files(k).name, k, date, hours,water, geno ,wholepos,wholepossrc,savedir)
+  %self, fname, id, datecreated, dest, water, geno, wholepos, srcdir, savedir;
+  fly = basiccal(fly);
+  fly = correction(fly);
+  fly = zoneid(fly);
+  fly = findrunstop(fly);
+  % fly = findangle(fly);
+  flies = [flies;fly];
 end
 
-save(fullfile(savedir,'fliesdatabase5'),'flies');
+save(fullfile(savedir,'fliesdatabase0112'),'flies');

@@ -87,7 +87,7 @@ end
 %---------------------------------------------------------------------------------------------------
 
 %---------------------------------------------------------------------------------------------------
-function self = assignment(self, fname, id, datecreated, dest, geno, wholepos, srcdir, savedir)% Assign variables to the object
+function self = assignment(self, fname, id, datecreated, dest, water, geno, wholepos, srcdir, savedir)% Assign variables to the object
   self.filename = fname;
   self.desiccation_hr = dest;
   self.genotype = geno;
@@ -96,6 +96,7 @@ function self = assignment(self, fname, id, datecreated, dest, geno, wholepos, s
   self.save_dir = savedir;
   self.datecreated = datecreated;
   self.id = id;
+  self.water = water;
 end
 %---------------------------------------------------------------------------------------------------
 
@@ -293,7 +294,7 @@ function self = zonecal(self)
 
       %Get step parameter within each zone
       inpos = self.wholepos(find(self.zone == 'i'),:);
-      
+
 end
 %---------------------------------------------------------------------------------------------------
 function self = findrunstop(self)
