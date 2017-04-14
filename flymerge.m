@@ -1,5 +1,5 @@
-myDir = [];
 myDir = uigetdir;
+cd(myDir);
 myFiles = dir(fullfile(myDir,'*.mat'));
 flydatabase = [];
 

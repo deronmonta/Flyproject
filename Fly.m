@@ -351,14 +351,15 @@ for i = 2 : length(self.size50steps)
 
 end
 
-inindex = find(self.zone == 'i');
-inindex = fix(inindex./10);
-innerangle = self.size10angle(inindex);
-
-outindex = find(self.zone == 'o');
-outindex = fix(outindex./10);
-outangle = self.size10angle(outindex);
-
+% inindex = find(self.zone == 'i');
+% inindex = fix(inindex./10);
+% outindex = find(self.zone == 'o');
+% outindex = fix(outindex./10);
+%
+% if inindex(:) ~= 0
+%   innerangle = self.size10angle(inindex);
+%   outangle = self.size10angle(outindex);
+% end
 %
 %     for i = 2:length(tenth)
 %       if i < length(tenth)
@@ -447,20 +448,32 @@ function replay(self)
   %plot(x3,y3,'r--')
 
   h = animatedline;
-
+  figure;
+  h2 = animatedline;
   for n = 1:length(self.wholepos)
 
   addpoints(h,self.wholepos(n,1),self.wholepos(n,2));
+  addpoints(h2,n,self.dis2center(n));
+  % addpoints(h2,n,self.size10angle(fix(n/10)));
   dim = [0.2 0.5 0.3 0.3];
-  disp(n);
   drawnow;
-  pause(0.0000001); % slow down the animation
+  pause(0.01); % slow down the animation
   end
+
 
   hold off;
   end
 
+function plothistogram(self)
 
+  %histogram(self.size10stepslength,'Normalization','probability');
+  % self.size10angle = abs(self.size10angle);
+   self.size5angle = abs(self.size5angle);
+   self.size10angle = abs(self.size10angle);
+   histogram(self.size10steps,'Normalization','probability');
+  % histogram(self.speed,'Normalization','probability');
+
+end
 %---------------------------------------------------------------------------------------------------
 function displayresults(self)%This method is called when need to display plots
 
@@ -469,7 +482,7 @@ function displayresults(self)%This method is called when need to display plots
 
   title('Track results');
 
-  hold on
+  hold on;
   set(gca,'YDir','Reverse');
 
   if length(self.wholepos) < 400
