@@ -56,6 +56,7 @@ properties
       firsthundred;
       errors;
       curvature;
+      avgcurvature;
       sharpturnpos;
       water;
       vec;
@@ -65,12 +66,14 @@ properties
       size10steps;
       size10angle;
       size10stepslength;
+      size10sharpturn;
       size20steps;
       size20stepslength;
       size20angle;
       size50steps;
       size50stepslength;
       size50angle;
+      startout;
 
 
 
@@ -115,7 +118,6 @@ function self = basiccal(self)% This function is called every time
     %Assign speed
     self.speed = zeros(self.totalframe - 1, 1);
     self.speed = sqrt(diff(self.wholepos.^2));
-    self.avgspeed = mean(self.speed);
 
 end
 %---------------------------------------------------------------------------------------------------
@@ -153,6 +155,8 @@ function self = correction(self)
   self.wholepos(speederror,:) = [];
   self.dis2center(speederror) = [];
   self.errors = length(speederror) + length(diserror);
+  self.avgspeed = mean(self.speed);
+
 
   self.firstten= abs(sqrt(sum((self.wholepos(10,:) - self.wholepos(1,:)).^2)));
   self.firstthirty = abs(sqrt(sum((self.wholepos(30,:) - self.wholepos(1,:)).^2)));
@@ -198,6 +202,13 @@ function self = zoneid(self) % For identifying each zone
     midt = length(midindex);
     outt = length(outindex);
     self.attraction = intime / length(self.zone);
+  if (self.zone(1) == 'm')||(self.zone(1) =='o')
+
+    self.startout = 1;
+  else
+    self.startout = 0;
+  end
+
 
 %Find the first time fly enter target zone
 if ~isempty(inindex) && ~isempty(midindex) && ~isempty(outindex)
@@ -207,6 +218,10 @@ if ~isempty(inindex) && ~isempty(midindex) && ~isempty(outindex)
     self.firstenter = inindex(1);
 
   end
+
+elseif ~isempty(inindex) && (isempty(midindex) || isempty(outindex))
+
+  self.firstenter = 0;
 end
 
 %Find the speed before fly enter the target zone
@@ -310,83 +325,86 @@ end
 %---------------------------------------------------------------------------------------------------
 
 function self = findangle(self)
-vec = [];
-fifth = [];
-magnitude = [];
+    vec = [];
+    fifth = [];
+    magnitude = [];
 
-fifth = self.wholepos(1:5:end,:);
+    fifth = self.wholepos(1:5:end,:);
 
-for i = 2 : length(self.size5steps)
+  for i = 2 : length(self.size5steps)
 
-  if self.size5steps(i,1) ~= 0 && self.size5steps(i,2) ~= 0
-    self.size5angle = [self.size5angle; atan2d(self.size5steps(i-1,1)*self.size5steps(i,2) - self.size5steps(i-1,2)*self.size5steps(i,1), self.size5steps(i,1)*self.size5steps(i-1,1) + self.size5steps(i,2)*self.size5steps(i-1,2))];
+    if self.size5steps(i,1) ~= 0 && self.size5steps(i,2) ~= 0
+      self.size5angle = [self.size5angle; atan2d(self.size5steps(i-1,1)*self.size5steps(i,2) - self.size5steps(i-1,2)*self.size5steps(i,1), self.size5steps(i,1)*self.size5steps(i-1,1) + self.size5steps(i,2)*self.size5steps(i-1,2))];
+      %Find angle between two consecutive steps
+    end
+  end
+
+
+  for i = 2 : length(self.size10steps)
+
+    if self.size10steps(i,1) ~= 0 && self.size10steps(i,2) ~= 0
+      self.size10angle = [self.size10angle; atan2d(self.size10steps(i-1,1)*self.size10steps(i,2) - self.size10steps(i-1,2)*self.size10steps(i,1), self.size10steps(i,1)*self.size10steps(i-1,1) + self.size10steps(i,2)*self.size10steps(i-1,2))];
+      %Find angle between two consecutive steps
+    end
+  end
+
+  for i = 2 : length(self.size20steps)
+
+    if self.size20steps(i,1) ~= 0 && self.size20steps(i,2) ~= 0
+      self.size20angle = [self.size20angle; atan2d(self.size20steps(i-1,1)*self.size20steps(i,2) - self.size20steps(i-1,2)*self.size20steps(i,1), self.size20steps(i,1)*self.size20steps(i-1,1) + self.size20steps(i,2)*self.size20steps(i-1,2))];
     %Find angle between two consecutive steps
+    end
+
   end
-end
 
+  for i = 2 : length(self.size50steps)
 
-for i = 2 : length(self.size10steps)
-
-  if self.size10steps(i,1) ~= 0 && self.size10steps(i,2) ~= 0
-    self.size10angle = [self.size10angle; atan2d(self.size10steps(i-1,1)*self.size10steps(i,2) - self.size10steps(i-1,2)*self.size10steps(i,1), self.size10steps(i,1)*self.size10steps(i-1,1) + self.size10steps(i,2)*self.size10steps(i-1,2))];
+    if self.size50steps(i,1) ~= 0 && self.size50steps(i,2) ~= 0
+      self.size50angle = [self.size50angle; atan2d(self.size50steps(i-1,1)*self.size50steps(i,2) - self.size50steps(i-1,2)*self.size50steps(i,1), self.size50steps(i,1)*self.size50steps(i-1,1) + self.size50steps(i,2)*self.size50steps(i-1,2))];
     %Find angle between two consecutive steps
-  end
-end
+    end
 
-for i = 2 : length(self.size20steps)
-
-  if self.size20steps(i,1) ~= 0 && self.size20steps(i,2) ~= 0
-    self.size20angle = [self.size20angle; atan2d(self.size20steps(i-1,1)*self.size20steps(i,2) - self.size20steps(i-1,2)*self.size20steps(i,1), self.size20steps(i,1)*self.size20steps(i-1,1) + self.size20steps(i,2)*self.size20steps(i-1,2))];
-  %Find angle between two consecutive steps
   end
 
-end
+  self.size10sharpturn = sum(abs(self.size10angle) > 90);
+  % inindex = find(self.zone == 'i');
+  % inindex = fix(inindex./10);
+  % outindex = find(self.zone == 'o');
+  % outindex = fix(outindex./10);
+  %
+  % if inindex(:) ~= 0
+  %   innerangle = self.size10angle(inindex);
+  %   outangle = self.size10angle(outindex);
+  % end
+  %
+  %     for i = 2:length(tenth)
+  %       if i < length(tenth)
+  %         vec2 = [tenth(i,:)-tenth(i-1,:),0];
+  %         vec = [tenth(i+1,:)-tenth(i,:),0];
+  %       end
+  %         angle =  (atan2d(norm(cross(vec,vec2)),dot(vec,vec2)));
+  %       if ~(angle == 0)
+  %         self.angle= [self.angle;angle];
+  %         self.sharpturn = numel(find(self.angle > 90));
+  %       end
+  %         % self.sharpturn(:,2) = self.angle(find(self.angle > 90));
+  %     end
+    vec = diff(fifth);
+    % vec(i,:) = fifth(i+1,:) - fifth(i,:); % The tagent of the curve
 
-for i = 2 : length(self.size50steps)
+       magnitude = sqrt(vec(:,1).^2 + vec(:,2).^2);
+       vec(:,1) = vec(:,1)./magnitude; %Trasform to unit step, x direction
+       vec(:,2) = vec(:,2)./magnitude; %Trasform to unit step, x direction
+       self.curvature = [];
+       self.curvature = diff(vec);
+       self.curvature = self.curvature(:,1).^2 + self.curvature(:,2).^2;
+       self.avgcurvature = nanmean(self.curvature(:));
+        % self.curvature = self.curvature';
+  sharp_threshold = 1.5;
+  self.sharpturnpos = find(self.curvature > sharp_threshold);
+  self.sharpturn = length(find (self.curvature > sharp_threshold));
 
-  if self.size50steps(i,1) ~= 0 && self.size50steps(i,2) ~= 0
-    self.size50angle = [self.size50angle; atan2d(self.size50steps(i-1,1)*self.size50steps(i,2) - self.size50steps(i-1,2)*self.size50steps(i,1), self.size50steps(i,1)*self.size50steps(i-1,1) + self.size50steps(i,2)*self.size50steps(i-1,2))];
-  %Find angle between two consecutive steps
-  end
 
-end
-
-% inindex = find(self.zone == 'i');
-% inindex = fix(inindex./10);
-% outindex = find(self.zone == 'o');
-% outindex = fix(outindex./10);
-%
-% if inindex(:) ~= 0
-%   innerangle = self.size10angle(inindex);
-%   outangle = self.size10angle(outindex);
-% end
-%
-%     for i = 2:length(tenth)
-%       if i < length(tenth)
-%         vec2 = [tenth(i,:)-tenth(i-1,:),0];
-%         vec = [tenth(i+1,:)-tenth(i,:),0];
-%       end
-%         angle =  (atan2d(norm(cross(vec,vec2)),dot(vec,vec2)));
-%       if ~(angle == 0)
-%         self.angle= [self.angle;angle];
-%         self.sharpturn = numel(find(self.angle > 90));
-%       end
-%         % self.sharpturn(:,2) = self.angle(find(self.angle > 90));
-%     end
-  vec = diff(fifth);
-  % vec(i,:) = fifth(i+1,:) - fifth(i,:); % The tagent of the curve
-
-     magnitude = sqrt(vec(:,1).^2 + vec(:,2).^2);
-     vec(:,1) = vec(:,1)./magnitude; %Trasform to unit step, x direction
-     vec(:,2) = vec(:,2)./magnitude; %Trasform to unit step, x direction
-     self.curvature = [];
-     self.curvature = diff(vec);
-     self.curvature = self.curvature(:,1).^2 + self.curvature(:,2).^2;
-
-      % self.curvature = self.curvature';
-sharp_threshold = 1.5;
-self.sharpturnpos = find(self.curvature > sharp_threshold);
-self.sharpturn = length(find (self.curvature > sharp_threshold));
 
 
 end
@@ -599,13 +617,16 @@ function displayresults(self)%This method is called when need to display plots
   plot(x2,y2,'r--');%Plot outter target zone
 
 
-  for i = 1:length(self.sharpturnpos)
-    plot(self.wholepos(self.sharpturnpos(i),1),self.wholepos(self.sharpturnpos(i),2),'ok') % This plots all the sharp angle on the tracks
+size10sharpturnpos = find(self.size10angle > 90);
+  for i = 1:length(size10sharpturnpos)
+    plot(self.wholepos(size10sharpturnpos(i),1),self.wholepos(size10sharpturnpos(i),2),'ok') % This plots all the sharp angle on the tracks
   end
 
-  for i = 1:5:length(self.wholepos) %Size 5 steps
-    plot(self.wholepos(i,1),self.wholepos(i,2),'ob')
-  end
+
+
+  % for i = 1:5:length(self.wholepos) %Size 5 steps
+  %   plot(self.wholepos(i,1),self.wholepos(i,2),'ob')
+  % end
 end
 %---------------------------------------------------------------------------------------------------
 
