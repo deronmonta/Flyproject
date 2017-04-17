@@ -63,10 +63,14 @@ properties
       size5steps;
       size5angle;
       size5stepslength;
+      size5sharpturn;
+      size5avgangle;
+
       size10steps;
       size10angle;
       size10stepslength;
       size10sharpturn;
+
       size20steps;
       size20stepslength;
       size20angle;
@@ -205,24 +209,26 @@ function self = zoneid(self) % For identifying each zone
   if (self.zone(1) == 'm')||(self.zone(1) =='o')
 
     self.startout = 1;
-  else
+  elseif(self.zone(1) =='i')
     self.startout = 0;
   end
 
 
 %Find the first time fly enter target zone
-if ~isempty(inindex) && ~isempty(midindex) && ~isempty(outindex)
+if ~isempty(inindex) && (~isempty(midindex) || ~isempty(outindex))
 
-  if inindex(1) > midindex(1) || inindex(1) > outindex(1)
+  if self.startout == 1
 
     self.firstenter = inindex(1);
 
+  elseif self.startout == 0
+
+    self.firstenter = 0;
   end
 
-elseif ~isempty(inindex) && (isempty(midindex) || isempty(outindex))
+  end
 
-  self.firstenter = 0;
-end
+
 
 %Find the speed before fly enter the target zone
 
@@ -328,22 +334,29 @@ function self = findangle(self)
     vec = [];
     fifth = [];
     magnitude = [];
-
+    self.size5angle = [];
     fifth = self.wholepos(1:5:end,:);
 
-  for i = 2 : length(self.size5steps)
 
-    if self.size5steps(i,1) ~= 0 && self.size5steps(i,2) ~= 0
-      self.size5angle = [self.size5angle; atan2d(self.size5steps(i-1,1)*self.size5steps(i,2) - self.size5steps(i-1,2)*self.size5steps(i,1), self.size5steps(i,1)*self.size5steps(i-1,1) + self.size5steps(i,2)*self.size5steps(i-1,2))];
+  size5stepszero = [self.size5steps,(zeros(size(self.size5steps,1),1))];%Append zero column to right of array
+
+  for i = 2 : length(size5stepszero)
+
+
       %Find angle between two consecutive steps
-    end
+      %if (norm(size5stepszero(i))) > 1 || (norm(size5stepszero(i+1))) > 1 || (norm(size5stepszero(i+2))) > 1   %Avoid small steps mistaken for large angles
+        self.size5angle = [self.size5angle; atan2d(norm(cross(size5stepszero(i,:),size5stepszero(i-1,:))),dot(size5stepszero(i,:),size5stepszero(i-1,:)))];
+      %end
+
   end
 
+  size10stepszero = [self.size10steps,(zeros(size(self.size10steps,1),1))];%Append zero column to right of array
 
-  for i = 2 : length(self.size10steps)
+  for i = 2 : length(size10stepszero)
 
     if self.size10steps(i,1) ~= 0 && self.size10steps(i,2) ~= 0
-      self.size10angle = [self.size10angle; atan2d(self.size10steps(i-1,1)*self.size10steps(i,2) - self.size10steps(i-1,2)*self.size10steps(i,1), self.size10steps(i,1)*self.size10steps(i-1,1) + self.size10steps(i,2)*self.size10steps(i-1,2))];
+
+      self.size10angle = [self.size10angle; atan2d(norm(cross(size10stepszero(i,:),size10stepszero(i-1,:))),dot(size10stepszero(i,:),size10stepszero(i-1,:)))];
       %Find angle between two consecutive steps
     end
   end
@@ -367,6 +380,7 @@ function self = findangle(self)
   end
 
   self.size10sharpturn = sum(abs(self.size10angle) > 90);
+  self.size5sharpturn = sum(abs(self.size5angle) > 60);
   % inindex = find(self.zone == 'i');
   % inindex = fix(inindex./10);
   % outindex = find(self.zone == 'o');
@@ -403,6 +417,7 @@ function self = findangle(self)
   sharp_threshold = 1.5;
   self.sharpturnpos = find(self.curvature > sharp_threshold);
   self.sharpturn = length(find (self.curvature > sharp_threshold));
+  self.size5avgangle = mean(abs(self.size5angle));
 
 
 
@@ -617,11 +632,16 @@ function displayresults(self)%This method is called when need to display plots
   plot(x2,y2,'r--');%Plot outter target zone
 
 
-size10sharpturnpos = find(self.size10angle > 90);
-  for i = 1:length(size10sharpturnpos)
-    plot(self.wholepos(size10sharpturnpos(i),1),self.wholepos(size10sharpturnpos(i),2),'ok') % This plots all the sharp angle on the tracks
-  end
+% size10sharpturnpos = find(self.size10angle > 120);
+%   for i = 1:length(size10sharpturnpos)
+%     10*size10sharpturnpos(i)
+%     plot(self.wholepos(10*size10sharpturnpos(i),1),self.wholepos(10*size10sharpturnpos(i),2),'ok') % This plots all the sharp angle on the tracks
+%   end
 
+  size5sharpturnindex = find(abs(self.size5angle) > 60);
+    for i = 1:length(size5sharpturnindex)
+      plot(self.wholepos(5*size5sharpturnindex(i),1),self.wholepos(5*size5sharpturnindex(i),2),'ok') % This plots all the sharp angle on the tracks
+    end
 
 
   % for i = 1:5:length(self.wholepos) %Size 5 steps

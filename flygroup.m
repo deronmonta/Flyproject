@@ -1,6 +1,7 @@
 %This will Group the flies according to different condition
 
 %file = uigetfile;
+clear all;
 load('flydatabase');%Load fly database
 water_thirsty = [];
 water_non_thirsty = [];
@@ -72,13 +73,19 @@ subplot(4,4,9)
 % boxplot(eachtimeini,grp)
 % title('Each time spent in target zone')
 
-grp = [ones(1,length(vertcat(water_thirsty.avgcurvature))),2*ones(1,length(vertcat(no_water_thirsty.avgcurvature))),3*ones(1,length(vertcat(water_thirsty.avgcurvature)))];
-curvature =  vertcat(water_thirsty.avgcurvature,no_water_thirsty.avgcurvature,water_thirsty.avgcurvature);
-boxplot(curvature,grp);
-title('curvature');
+% grp = [ones(1,length(vertcat(water_non_thirsty.avgcurvature))),2*ones(1,length(vertcat(no_water_thirsty.avgcurvature))),3*ones(1,length(vertcat(water_thirsty.avgcurvature)))];
+% curvature =  vertcat(water_non_thirsty.avgcurvature,no_water_thirsty.avgcurvature,water_thirsty.avgcurvature);
+% boxplot(curvature,grp);
+% title('curvature');
 
-subplot(4,4,10);
-grp = [ones(1,length(vertcat(water_thirsty.size10sharpturn))),2*ones(1,length(vertcat(no_water_thirsty.size10sharpturn))),3*ones(1,length(vertcat(water_thirsty.size10sharpturn)))];
-size10sharpturn =  vertcat(water_thirsty.size10sharpturn,no_water_thirsty.size10sharpturn,water_thirsty.size10sharpturn);
-boxplot(size10sharpturn,grp);
+subplot(4,4,9);
+grp = [ones(1,length(vertcat(water_non_thirsty.size5avgangle))),2*ones(1,length(vertcat(no_water_thirsty.size5avgangle))),3*ones(1,length(vertcat(water_thirsty.size5avgangle)))];
+size5avgangle =  vertcat(water_non_thirsty.size5avgangle,no_water_thirsty.size5avgangle,water_thirsty.size5avgangle);
+boxplot(size5avgangle,grp);
+title('Anlges turned');
+
+subplot(4,4,10)
+grp = [ones(1,length(vertcat(water_non_thirsty.size5sharpturn))),2*ones(1,length(vertcat(no_water_thirsty.size5sharpturn))),3*ones(1,length(vertcat(water_thirsty.size5sharpturn)))];
+size5sharpturn =  vertcat(water_non_thirsty.size5sharpturn,no_water_thirsty.size5sharpturn,water_thirsty.size5sharpturn);
+boxplot(size5sharpturn,grp);
 title('Total Sharp turns');
