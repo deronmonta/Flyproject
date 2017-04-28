@@ -122,3 +122,28 @@ stringtitle = strcat('P value: ',num2str(size5sharpturnp));
 xlabel(stringtitle);
 
 subplot(4,4,11)
+grp = [ones(1,length(vertcat(water_non_thirsty.avgsize5anglei))),2*ones(1,length(vertcat(no_water_thirsty.avgsize5anglei))),3*ones(1,length(vertcat(water_thirsty.avgsize5anglei)))];
+avgsize5anglei =  vertcat(water_non_thirsty.avgsize5anglei,no_water_thirsty.avgsize5anglei,water_thirsty.avgsize5anglei);
+boxplot(avgsize5anglei,grp);
+[avgsize5angleip,tb10] = anova1(avgsize5anglei,grp,'off')%One way anova for this parameter
+title('Angle in Inner zone');
+stringtitle = strcat('P value: ',num2str(avgsize5angleip));
+xlabel(stringtitle);
+
+subplot(4,4,12)
+grp = [ones(1,length(vertcat(water_non_thirsty.avgsize5anglem))),2*ones(1,length(vertcat(no_water_thirsty.avgsize5anglem))),3*ones(1,length(vertcat(water_thirsty.avgsize5anglem)))];
+avgsize5anglem =  vertcat(water_non_thirsty.avgsize5anglem,no_water_thirsty.avgsize5anglem,water_thirsty.avgsize5anglem);
+boxplot(avgsize5anglem,grp);
+[avgsize5anglemp,tb10] = anova1(avgsize5anglem,grp,'off')%One way anova for this parameter
+title('Angle in Mid zone');
+stringtitle = strcat('P value: ',num2str(avgsize5anglemp));
+xlabel(stringtitle);
+
+subplot(4,4,13)
+grp = [ones(1,length(vertcat(water_non_thirsty.avgsize5angleo))),2*ones(1,length(vertcat(no_water_thirsty.avgsize5angleo))),3*ones(1,length(vertcat(water_thirsty.avgsize5angleo)))];
+avgsize5angleo =  vertcat(water_non_thirsty.avgsize5angleo,no_water_thirsty.avgsize5angleo,water_thirsty.avgsize5angleo);
+boxplot(avgsize5angleo,grp);
+[avgsize5angleop,tb10] = anova1(avgsize5angleo,grp,'off')%One way anova for this parameter
+title('Angle in Outer zone');
+stringtitle = strcat('P value: ',num2str(avgsize5angleop));
+xlabel(stringtitle);

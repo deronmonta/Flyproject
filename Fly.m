@@ -68,6 +68,9 @@ properties
       size5anglei;
       size5anglem;
       size5angleo;
+      avgsize5anglei;
+      avgsize5anglem;
+      avgsize5angleo;
 
       size10steps;
       size10angle;
@@ -81,6 +84,7 @@ properties
       size50stepslength;
       size50angle;
       startout;
+
 
 
 
@@ -422,17 +426,16 @@ function self = findangle(self)
   self.sharpturn = length(find (self.curvature > sharp_threshold));
   self.size5avgangle = mean(abs(self.size5angle));
   size5angle = repelem(self.size5angle,5);
-  length(size5angle)
   if length(size5angle) < length(self.zone)
     zone = self.zone;
-    length(zone)
     difference = length(zone) - length(size5angle);
-    zone(end - difference) = [];
-    length(zone)
-    length(size5angle)
+    zone(end-difference:end) = [];
   self.size5anglei = size5angle(find(zone == 'i'));
+  self.avgsize5anglei = mean(self.size5anglei);
   self.size5anglem = size5angle(find(zone == 'm'));
+  self.avgsize5anglem = mean(self.size5anglem);
   self.size5angleo = size5angle(find(zone == 'o'));
+  self.avgsize5angleo = mean(self.size5angleo);
 end
 end
 
