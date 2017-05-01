@@ -27,6 +27,14 @@ for i = 1:20
   water_thirsty(i).displayresults
 end
 
+for i = 1:length(water_thirsty)
+  speedstd(i,:) = std(water_thirsty(i).size5steps)
+end
+
+for i = 1:length(no_water_thirsty)
+  speedstd(i,:) = std(no_water_thirsty(i).size5steps)
+end
+
 for i = 1 : length(no_water_thirsty)
   no_water_thirsty(i).displayresults
 end
