@@ -62,7 +62,7 @@ boxplot(innerspeed,grp);
 [innerspeedp,tb5] = anova1(innerspeed,grp,'off')%One way anova for this parameter
 title('Inner Speed');
 stringtitle = strcat('P value: ',num2str(innerspeedp));
-xlabel(stringtitle);
+xlabel(stringtitle);      
 
 subplot(4,4,6)%Mid speed
 grp = [ones(1,length([water_non_thirsty.midspeed])), 2*ones(1,length([no_water_thirsty.midspeed])),3*ones(1,length([water_thirsty.midspeed]))];

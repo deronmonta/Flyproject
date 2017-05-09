@@ -5,8 +5,8 @@ steplength = obj.size5steps;
 stepangle = obj.size5angle;
 randlength = datasample(steplength,length(steplength));%Random sampling of step size
 randangle = datasample(stepangle,length(stepangle));%Random sampling of angle
-slidog = sqrt(movingvar(stepangle,2));%Sliding variance of orgrinal tracks
-slidsim = sqrt(movingvar(randangle,2));%Sliing variance of random tracks
+slidog = sqrt(movingvar(stepangle,10 ));%Sliding variance of orgrinal tracks
+slidsim = sqrt(movingvar(randangle,10));%Sliing variance of random tracks
 disp('sliding og mean')
 mean(slidog)
 disp('slidng sim mean')
@@ -16,11 +16,11 @@ obj.displayresults;
 
 for  i = 2 : length(randangle)
 
-simx = randlength(i)*cos(randangle(i));
-simy = randlength(i)*sin(randangle(i));
-simxy(i,:) = [simx simy];
-pos(i,1) = pos(i-1,1) + simx;
-pos(i,2) = pos(i-1,2) + simy;
+  simx = randlength(i)*cos(randangle(i));
+  simy = randlength(i)*sin(randangle(i));
+  simxy(i,:) = [simx simy];
+  pos(i,1) = pos(i-1,1) + simx;
+  pos(i,2) = pos(i-1,2) + simy;
 
 end
 
