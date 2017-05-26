@@ -31,10 +31,15 @@ properties
       dzone%the decision posistion status of fly
       stops;
       runs;
+      runsin;
+      runsout;
       attraction;
       eachtimeini;
       eachtimeinm;
       eachtimeino;
+      eachtimeiniavg;
+      eachtimeinmavg;
+      eachtimeinoavg;
       totald;
       correctd;
       wrongd;
@@ -50,6 +55,8 @@ properties
       stopchance;
       enterspeed;
       enterspeedavg;
+      exitspeed;
+      exitspeedavg;
       firstten;
       firstthirty;
       firstfifty;
@@ -169,10 +176,10 @@ function self = correction(self)
   self.avgspeed = mean(self.speed);
 
 
-  self.firstten= abs(sqrt(sum((self.wholepos(10,:) - self.wholepos(1,:)).^2)));
-  self.firstthirty = abs(sqrt(sum((self.wholepos(30,:) - self.wholepos(1,:)).^2)));
-  self.firstfifty = abs(sqrt(sum((self.wholepos(50,:) - self.wholepos(1,:)).^2)));
-  self.firsthundred = abs(sqrt(sum((self.wholepos(100,:) - self.wholepos(1,:)).^2)));
+  % self.firstten= abs(sqrt(sum((self.wholepos(10,:) - self.wholepos(1,:)).^2)));
+  % self.firstthirty = abs(sqrt(sum((self.wholepos(30,:) - self.wholepos(1,:)).^2)));
+  % self.firstfifty = abs(sqrt(sum((self.wholepos(50,:) - self.wholepos(1,:)).^2)));
+  % self.firsthundred = abs(sqrt(sum((self.wholepos(100,:) - self.wholepos(1,:)).^2)));
   self.vec = diff(self.wholepos);
 
   %The following calculates steps and steps length for different time span
@@ -241,10 +248,16 @@ if ~isempty(inindex) && (~isempty(midindex) || ~isempty(outindex))
 
 for i = 1:length(self.zone) - 1
 
-  if self.zone(i) == 'm' && self.zone(i+1) == 'i' && i > 30%From mid to inner zone
-    self.enterspeed = [self.enterspeed;mean(self.speed(i-30 : i ))]; %Find the speed of prior 30 frames
+  if self.zone(i) == 'm' && self.zone(i+1) == 'i' && i > 10 && i +10 < length(self.wholepos)%From mid to inner zone
+    self.enterspeed = [self.enterspeed;mean(self.speed(i-10 : i+10))]; %Find the speed of prior 30 frames
   end
+
+  if self.zone(i) == 'i' && self.zone(i+1) == 'm' && i > 10 && i +10 < length(self.wholepos)%From inner to mid zone
+    self.exitspeed = [self.exitspeed;mean(self.speed(i-10 : i+10))]; %Find the speed of prior 30 frames
+  end
+
 end
+self.exitspeedavg = mean(self.exitspeed);
 self.enterspeedavg = mean(self.enterspeed);
 
 
@@ -298,21 +311,25 @@ function self = zonecal(self)
       timestamps = find(diff([-1 inzone -1]) ~= 0);%Where the inzone change
       runlength = diff(timestamps);
       self.eachtimeini = runlength(1+(inzone(1) == 0 ):2:end);
-      self.eachtimeini = self.eachtimeini';
+      self.eachtimeiniavg = mean(self.eachtimeini)
+      %self.eachtimeini = self.eachtimeini';
 
       timestamps = find(diff([-1 reversezone -1]) ~= 0);%Where the self.zone change
       midzone = (reversezone =='m');
       timestamps = find(diff([-1 midzone -1]) ~= 0);%Where the midzone change
       runlength = diff(timestamps);
       self.eachtimeinm = runlength(1+(midzone(1) == 0):2:end);
-      self.eachtimeinm = self.eachtimeinm';
+      self.eachtimeinmavg = mean(self.eachtimeinm)
+      %self.eachtimeinm = self.eachtimeinm';
 
       timestamps = find(diff([-1 reversezone -1]) ~= 0);%Where the self.zone change
       outzone = (reversezone =='o');
       timestamps = [find(diff([-1 outzone -1]) ~= 0)];%Where the outzone change
       runlength = diff(timestamps);
       self.eachtimeino = runlength(1 +(outzone(1) == 0):2:end);
-      self.eachtimeino = self.eachtimeino';
+      self.eachtimeinoavg = mean(self.eachtimeino)
+
+      %self.eachtimeino = self.eachtimeino';
 
       self.zone(end-1:end) = [];
       self.innerspeed = mean(self.speed(find(self.zone == 'i')));%This calculates the mean speed of the inner zone
@@ -331,6 +348,9 @@ function self = findrunstop(self)
   self.runs = [];
   self.stops = length(find(self.speed < 1));
   self.runs = length(find(self.speed > 3.5));
+  self.runsin = length(intersect(find(self.speed > 3.5),(find(self.zone =='i'))));% Find the runs in inner zone
+  self.runsout =length(intersect(find(self.speed > 3.5),(find(self.zone =='m'))));
+
   self.stopchance = (self.stops) / length(self.speed);
   self.runchance = (self.runs) / length(self.speed);
 

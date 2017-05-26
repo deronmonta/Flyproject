@@ -3,8 +3,8 @@
 obj = no_water_thirsty(10);
 steplength = obj.size5steps;
 stepangle = obj.size5angle;
-randlength = datasample(steplength,length(steplength));%Random sampling of step size
-randangle = datasample(stepangle,length(stepangle));%Random sampling of angle
+randlength = datasample(steplength,length(steplength),'Replace',false);%Random sampling of step size
+randangle = datasample(stepangle,length(stepangle),'Replace',false);%Random sampling of angle
 slidog = sqrt(movingvar(stepangle,10 ));%Sliding variance of orgrinal tracks
 slidsim = sqrt(movingvar(randangle,10));%Sliing variance of random tracks
 disp('sliding og mean')
@@ -13,15 +13,17 @@ disp('slidng sim mean')
 mean(slidsim)
 pos(1,:) = [0 0];
 obj.displayresults;
-
+dis2center = [];
 for  i = 2 : length(randangle)
 
   simx = randlength(i)*cos(randangle(i));
   simy = randlength(i)*sin(randangle(i));
-  simxy(i,:) = [simx simy];
   pos(i,1) = pos(i-1,1) + simx;
   pos(i,2) = pos(i-1,2) + simy;
-
+  dis2center(i,:) = sqrt(sum((pos(i,:)-[250,250]).^2));
+  if dis2center(i) > 240
+    randangle(i+1) = -randangle(i);
+  end
 end
 
 %Count the number of time fly change direction

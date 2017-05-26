@@ -4,7 +4,10 @@ load(flydb);
 for k = 1 : length(flydatabase)
   % flydatabase(k);
   % flydatabase(k).tzone_outer_radius = 240;
-   flydatabase(k).tzone_inner_radius = 85;
+  if flydatabase(k).desiccation_hr > 0
+    flydatabase(k).desiccation_hr = 25;
+  end
+   flydatabase(k).tzone_inner_radius = 60;
   flydatabase(k) = basiccal(flydatabase(k));
   flydatabase(k) = correction(flydatabase(k));
    flydatabase(k) = zoneid(flydatabase(k));

@@ -2,7 +2,7 @@ clear all
 disp('Choose Fly position files source');
 wholepossrc = uigetdir;
 disp('Choose flydatabase directory');
-savedir = uigetdir;
+savedir = 'C:\Users\deron\Documents\MATLAB\Fly_Data_Git\Lin_DataBase';
 % fly = Fly();%Single Fly obj
 flies = [];%Flies array
 files = dir(fullfile(wholepossrc,'*.mat'));
@@ -25,4 +25,4 @@ for k = 1:length(files)
   flies = [flies;fly];
 end
 
-save(fullfile(savedir,'0112tvnt'),'flies');
+save(fullfile(savedir,'tw0503'),'flies');

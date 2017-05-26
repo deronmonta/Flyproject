@@ -39,6 +39,11 @@ for i = 1 : length(no_water_thirsty)
   no_water_thirsty(i).displayresults
 end
 
+for i = 1 : length(no_water_non_thirsty)
+  no_water_non_thirsty(i).displayresults
+end
+
+
 for i = 1 : length(water_non_thirsty)
   water_non_thirsty(i).displayresults
 end
