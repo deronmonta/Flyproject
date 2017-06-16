@@ -25,4 +25,4 @@ for k = 1:length(files)
   flies = [flies;fly];
 end
 
-save(fullfile(savedir,'tw0503'),'flies');
+save(fullfile(savedir,'ptnw0524'),'flies');

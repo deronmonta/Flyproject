@@ -238,9 +238,13 @@ if ~isempty(inindex) && (~isempty(midindex) || ~isempty(outindex))
   elseif self.startout == 0
 
     self.firstenter = 0;
-  end
 
   end
+elseif isempty(inindex)
+  self.firstenter = 3000;
+end
+
+
 
 
 
