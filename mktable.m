@@ -15,4 +15,5 @@ enterspeed = [flydatabase.enterspeedavg]';
 exitspeed = [flydatabase.exitspeedavg]';
 
 
-T = table(id,desiccation_hr,water,attraction,speed,runs,stops,innerspeed,midspeed,avgangle,firstenter,enterspeed,exitspeed);
+T = table(id,desiccation_hr,water,attraction,speed,runs,stops,innerspeed,midspeed,avgangle,firstenter,enterspeed,exitspeed)
+T
