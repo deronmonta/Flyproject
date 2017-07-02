@@ -69,7 +69,7 @@ water;
 vec;
 size5steps;
 size5angle;
-size5angle1st;
+size5angle1st;%First derivative of the size 5 step angle
 size5angle1stavg;
 size5angle2nd;
 size5angle2ndavg;
@@ -95,6 +95,13 @@ size50steps;
 size50stepslength;
 size50angle;
 startout;
+
+localmax;
+maxloc;
+localmin;
+minloc;
+period;
+
 
 
 
@@ -438,6 +445,16 @@ function savemat(self)
 
 end
 %---------------------------------------------------------------------------------------------------
+function self = findperiod(self)
+
+  ac=xcorr(self.dis2center,self.dis2center);
+  [self.localmax,self.maxloc]=findpeaks(ac);
+  self.period = mean(diff(self.maxloc)*0.01);
+
+end
+%---------------------------------------------------------------------------------------------------
+
+%---------------------------------------------------------------------------------------------------
 
 %---------------------------------------------------------------------------------------------------
 function savefig(self)
@@ -499,12 +516,11 @@ function replay(self)
         drawnow;
         pause(0.01); % slow down the animation
     end
-
-
     hold off;
 end
+%---------------------------------------------------------------------------------------------------
 
-function plothistogram(self)
+function plotdiagrams(self)
 
     %histogram(self.size10stepslength,'Normalization','probability');
     % self.size10angle = abs(self.size10angle);
@@ -518,8 +534,17 @@ function plothistogram(self)
     histogram(self.size5angle,'Normalization','probability');
     title('Size 5 angle distribution');
 
-    % histogram(self.speed,'Normalization','probability');
+    figure;
+    histogram(self.dis2center,'Normalization','probability');
+    title('Distance to Center distribution')
+    self.displayresults;
 
+    figure;
+    hold on
+    plot(self.dis2center);
+    plot(self.localmax,self.maxloc,'g*');
+
+    % histogram(self.speed,'Normalization','probability');
 end
 %---------------------------------------------------------------------------------------------------
 function displayresults(self)%This method is called when need to display plots

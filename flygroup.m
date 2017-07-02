@@ -197,3 +197,57 @@ boxplot(eachtimeiniavg,grp);
 title('Average Time Span in Inner Zone');
 stringtitle = strcat('P value: ',num2str(eachtimeiniavgp));
 xlabel(stringtitle);
+
+subplot(4,4,2)
+grp = [ones(1,length([no_water_non_thirsty.eachtimeiniavg])), 2*ones(1,length([water_non_thirsty.eachtimeiniavg])),3*ones(1,length([no_water_thirsty.eachtimeiniavg])),4*ones(1,length([water_thirsty.eachtimeiniavg]))];
+eachtimeiniavg =  horzcat([no_water_non_thirsty.eachtimeiniavg],[water_non_thirsty.eachtimeiniavg],[no_water_thirsty.eachtimeiniavg],[water_thirsty.eachtimeiniavg]);
+boxplot(eachtimeiniavg,grp);
+[eachtimeiniavgp,tb10] = anova1(eachtimeiniavg,grp,'off')%One way anova for this parameter
+title('Average Time Span in Inner Zone');
+stringtitle = strcat('P value: ',num2str(eachtimeiniavgp));
+xlabel(stringtitle);
+
+subplot(4,4,3)
+grp = [ones(1,length([no_water_non_thirsty.dpercentage])), 2*ones(1,length([water_non_thirsty.dpercentage])),3*ones(1,length([no_water_thirsty.dpercentage])),4*ones(1,length([water_thirsty.dpercentage]))];
+dpercentage =  horzcat([no_water_non_thirsty.dpercentage],[water_non_thirsty.dpercentage],[no_water_thirsty.dpercentage],[water_thirsty.dpercentage]);
+boxplot(dpercentage,grp);
+[dpercentagep,tb10] = anova1(dpercentage,grp,'off')%One way anova for this parameter
+title('Decision percentage');
+stringtitle = strcat('P value: ',num2str(dpercentagep));
+xlabel(stringtitle);
+
+subplot(4,4,4)
+grp = [ones(1,length([no_water_non_thirsty.totald])), 2*ones(1,length([water_non_thirsty.totald])),3*ones(1,length([no_water_thirsty.totald])),4*ones(1,length([water_thirsty.totald]))];
+totald =  horzcat([no_water_non_thirsty.totald],[water_non_thirsty.totald],[no_water_thirsty.totald],[water_thirsty.totald]);
+boxplot(totald,grp);
+[totaldp,tb10] = anova1(totald,grp,'off')%One way anova for this parameter
+title('Total Decisions');
+stringtitle = strcat('P value: ',num2str(totaldp));
+xlabel(stringtitle);
+
+subplot(4,4,5)
+grp = [ones(1,length([no_water_non_thirsty.size5angle1stavg])), 2*ones(1,length([water_non_thirsty.size5angle1stavg])),3*ones(1,length([no_water_thirsty.size5angle1stavg])),4*ones(1,length([water_thirsty.size5angle1stavg]))];
+size5angle1stavg =  horzcat([no_water_non_thirsty.size5angle1stavg],[water_non_thirsty.size5angle1stavg],[no_water_thirsty.size5angle1stavg],[water_thirsty.size5angle1stavg]);
+boxplot(size5angle1stavg,grp);
+[size5angle1stavgp,tb10] = anova1(size5angle1stavg,grp,'off')%One way anova for this parameter
+title('First derivative of size 5 step angle');
+stringtitle = strcat('P value: ',num2str(size5angle1stavgp));
+xlabel(stringtitle);
+
+subplot(4,4,6)
+grp = [ones(1,length([no_water_non_thirsty.size5angle2ndavg])), 2*ones(1,length([water_non_thirsty.size5angle2ndavg])),3*ones(1,length([no_water_thirsty.size5angle2ndavg])),4*ones(1,length([water_thirsty.size5angle2ndavg]))];
+size5angle2ndavg =  horzcat([no_water_non_thirsty.size5angle2ndavg],[water_non_thirsty.size5angle2ndavg],[no_water_thirsty.size5angle2ndavg],[water_thirsty.size5angle2ndavg]);
+boxplot(size5angle2ndavg,grp);
+[size5angle2ndavgp,tb10] = anova1(size5angle2ndavg,grp,'off')%One way anova for this parameter
+title('Second derivative of size 5 step angle');
+stringtitle = strcat('P value: ',num2str(size5angle2ndavgp));
+xlabel(stringtitle);
+
+subplot(4,4,7)
+grp = [ones(1,length([no_water_non_thirsty.period])), 2*ones(1,length([water_non_thirsty.period])),3*ones(1,length([no_water_thirsty.period])),4*ones(1,length([water_thirsty.period]))];
+period =  horzcat([no_water_non_thirsty.period],[water_non_thirsty.period],[no_water_thirsty.period],[water_thirsty.period]);
+boxplot(period,grp);
+[periodp,tb10] = anova1(period,grp,'off')%One way anova for this parameter
+title('Water Finding period');
+stringtitle = strcat('P value: ',num2str(periodp));
+xlabel(stringtitle);

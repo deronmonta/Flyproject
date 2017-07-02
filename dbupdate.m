@@ -14,6 +14,7 @@ for k = 1 : length(flydatabase)
    flydatabase(k) = zonecal(flydatabase(k));
   flydatabase(k) = findrunstop(flydatabase(k));
    flydatabase(k) = findangle(flydatabase(k));
+   flydatabase(k) = findperiod(flydatabase(k));
 
 end
 save('flydatabase.mat', 'flydatabase');
