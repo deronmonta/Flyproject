@@ -450,7 +450,7 @@ function self = findperiod(self)
   ac=xcorr(self.dis2center,self.dis2center);
   [self.localmax,self.maxloc]=findpeaks(ac);
   self.period = mean(diff(self.maxloc)*0.01);
-
+  self.localmax = self.localmax*1e-07;
 end
 %---------------------------------------------------------------------------------------------------
 
@@ -540,9 +540,10 @@ function plotdiagrams(self)
     self.displayresults;
 
     figure;
-    hold on
+
     plot(self.dis2center);
-    plot(self.localmax,self.maxloc,'g*');
+    hold on;
+    plot(self.maxloc*1/2,self.localmax*10,'g*');
 
     % histogram(self.speed,'Normalization','probability');
 end
