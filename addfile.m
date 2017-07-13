@@ -25,4 +25,4 @@ for k = 1:length(files)
   flies = [flies;fly];
 end
 
-save(fullfile(savedir,'ptnw0524'),'flies');
+save(fullfile(savedir,'ptnw0524'),'flies');% Change the filename here

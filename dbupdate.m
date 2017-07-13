@@ -7,7 +7,7 @@ for k = 1 : length(flydatabase)
   % if flydatabase(k).desiccation_hr > 0
   %   flydatabase(k).desiccation_hr = 25;
   % end
-   flydatabase(k).tzone_inner_radius = 60;
+   flydatabase(k).tzone_inner_radius = 60;%Change target radius here
   flydatabase(k) = basiccal(flydatabase(k));
   flydatabase(k) = correction(flydatabase(k));
    flydatabase(k) = zoneid(flydatabase(k));

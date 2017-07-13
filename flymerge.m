@@ -2,6 +2,7 @@ myDir = uigetdir;
 cd(myDir);
 myFiles = dir(fullfile(myDir,'*.mat'));
 flydatabase = [];
+delete flydatabase.mat;
 
 for i = 1 : length(myFiles)
 

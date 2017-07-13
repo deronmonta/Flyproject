@@ -543,7 +543,20 @@ function plotdiagrams(self)
 
     plot(self.dis2center);
     hold on;
-    plot(self.maxloc*1/2,self.localmax*10,'g*');
+    title('Distance to Center timeline plot');
+
+
+    figure;
+    plot(smooth(self.size5angle));
+    title('Size 5 angle');
+
+    figure;
+    plot(smooth(self.size5steps));
+    title('Size 5 steps');
+
+    figure;
+    plot(smooth(self.speed));
+    title('Speed');
 
     % histogram(self.speed,'Normalization','probability');
 end

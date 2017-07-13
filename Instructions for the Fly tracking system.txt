@@ -1,0 +1,44 @@
+Instructions for the Fly tracking system
+Creating single experiment fly objects:
+1. Upload raw .mat files to GitHub\Fly_Data_Git\Suewei according to different conditions
+2. Go to the addfile.m script and change the filename at line 28 (Suggestions: Use date and condition)
+3. Go to Matlab, change the directory to the .mat files you want to add
+4. Enter “addfile” at the Matlab command prompt
+5. Enter conditions according to the prompt
+6. The single condition file will be saved at GitHub\Fly_Data_Git\Lin_DataBase 
+
+Merging the single experiment flies objects to the entire fly database:
+This will merge every single experiment file at Lin_DataBase into one flydatabase
+1. Go to Matlab , change the directory to GitHub\Fly_Data_Git\Lin_DataBase
+2. Run “flymerge” at the command prompt
+3. Select current directory
+4. The final database is called “flydatabase”
+
+To load the flydatabase, locate it at the Matlab file navigator and double click on it.  
+Functions: 
+“flygroup”: 
+To use this function, first load the “flydatabase”. Running flygroup will create boxplots and group flies according to different conditions. 
+“dbupdate”:
+If you want to change the target zone size, go to the “dbupdate.m” script and 
+“mktable”:
+After loading the flydatabase, you can create a table with detail parameters by entering “mktable” at the command prompt
+
+Fly methods
+To examine the parameters of a single fly:
+Type “flydatabase(id_number)” into the command prompt
+You can either use the entire flydatabase id 
+Ex: “flydatabase(135)” 
+Or use condition id 
+Ex: “water_thirsty(15)” (You need to run flygroup first)
+Examine the trajectories:
+Add “.displayresults” at the end of the flydatabase(id_number)
+Ex: “water_thirsty(15). displayresults”
+Replay trajectories:
+	Add “.replay” at the end of the flydatabase(id_number)
+Create diagrams such as distance to :
+	Add “.plotdiagrams” at the end of the flydatabase(id_number)
+
+Updating the program
+Go to github desktop and click “sync” on the top right corner. 
+
+
